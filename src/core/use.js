@@ -1,1 +1,1 @@
-// import '@/plugin/element-ui'
+// import '@/core/axios'

@@ -1,4 +1,4 @@
-# v2_web
+# WSCv2_web
 
 ## Project setup
 

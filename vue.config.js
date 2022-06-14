@@ -5,7 +5,9 @@
  * @LastEditors: voanit
  * @LastEditTime: 2022-06-13 22:27:34
  */
-const { defineConfig } = require('@vue/cli-service')
+const {
+  defineConfig
+} = require('@vue/cli-service')
 const path = require('path')
 
 function resolve(dir) {
@@ -19,16 +21,16 @@ module.exports = defineConfig({
   productionSourceMap: false, // 建议生产关闭
   devServer: {
     open: true,
-    host: 'localhost',
     port: 8088,
+    host: '192.168.1.54',
     https: false,
     hot: 'only',
     proxy: {
-      [process.env.VUE_APP_BASE_API]: {
-        target: 'http://192.168.1.54:3007',
+      '/api': {
+        target: `http://192.168.1.54:3307`,
         changeOrigin: true,
         pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
+          '^/api': 'http://192.168.1.54:3307'
         }
       }
     }

@@ -1,55 +1,139 @@
 <template>
   <div class="container center">
     <div class="login-content">
+      <img class="surfing" src="@/assets/svg/aircraft.svg" alt="" srcset="" />
       <div class="content-left">
         <img src="@/assets/svg/login_left4.png" alt="" srcset="" />
         <!-- <img class="aircraft" src="@/assets/svg/aircraft.svg" alt="" srcset="" /> -->
       </div>
       <div class="content-right">
-        <img class="surfing" src="@/assets/svg/aircraft.svg" alt="" srcset="" />
         <div class="login-form">
           <div class="login-log">
             <img class="login-icon" src="@/assets/logo.png" alt="" srcset="" />
-            <p class="login-text">Wenv2-Admin</p>
+            <p class="login-text">Vue2-Admin</p>
           </div>
-          <div>
-            <el-form
-              :model="ruleForm"
-              status-icon
-              :rules="rules"
-              ref="ruleForm"
-              label-width="0"
-              class="demo-ruleForm"
-            >
-              <el-form-item label="" prop="username">
-                <el-input
-                  v-model="ruleForm.username"
-                  autocomplete="off"
-                  prefix-icon="el-icon-user"
-                  placeholder="用户名：admin / root"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="" prop="password">
-                <el-input
-                  type="password"
-                  v-model="ruleForm.password"
-                  prefix-icon="el-icon-lock"
-                  placeholder="密码：123456"
-                  autocomplete="off"
-                ></el-input>
-              </el-form-item>
-            </el-form>
+          <div class="tabs">
+            <div class="tab-title">
+              <div
+                class="tab-item"
+                :class="activeName === 'login' ? 'active' : ''"
+                @click="handleSwitch(0)"
+              >
+                登录
+              </div>
+              <div
+                class="tab-item"
+                :class="activeName === 'register' ? 'active' : ''"
+                @click="handleSwitch(1)"
+              >
+                注册
+              </div>
+            </div>
+            <div class="tab-content">
+              <div class="tab-pane" v-if="activeName === 'login'">
+                <div>
+                  <el-form
+                    :model="ruleForm"
+                    status-icon
+                    :rules="rules"
+                    ref="ruleForm"
+                    label-width="0"
+                    class="demo-ruleForm"
+                  >
+                    <el-form-item label="" prop="username">
+                      <el-input
+                        v-model="ruleForm.username"
+                        autocomplete="off"
+                        prefix-icon="el-icon-user"
+                        placeholder="用户名：admin / root"
+                      ></el-input>
+                    </el-form-item>
+                    <el-form-item label="" prop="password">
+                      <el-input
+                        type="password"
+                        v-model="ruleForm.password"
+                        prefix-icon="el-icon-lock"
+                        placeholder="密码：123456"
+                        autocomplete="off"
+                        show-password
+                      ></el-input>
+                    </el-form-item>
+                  </el-form>
+                </div>
+              </div>
+              <div class="tab-pane" v-if="activeName === 'register'">
+                <div>
+                  <el-form
+                    :model="registerRuleForm"
+                    status-icon
+                    :rules="registerRules"
+                    ref="registerRuleForm"
+                    label-width="0"
+                  >
+                    <el-form-item label="" prop="username">
+                      <el-input
+                        v-model="registerRuleForm.username"
+                        autocomplete="off"
+                        prefix-icon="el-icon-user"
+                        placeholder="请输出用户名"
+                      ></el-input>
+                    </el-form-item>
+                    <el-form-item label="" prop="password">
+                      <el-input
+                        type="password"
+                        v-model="registerRuleForm.password"
+                        prefix-icon="el-icon-lock"
+                        placeholder="请输入密码"
+                        autocomplete="off"
+                        show-password
+                      ></el-input>
+                    </el-form-item>
+                    <el-form-item label="" prop="checkPass">
+                      <el-input
+                        type="password"
+                        prefix-icon="el-icon-circle-check"
+                        v-model="registerRuleForm.checkPass"
+                        placeholder="请再次输入密码"
+                        autocomplete="off"
+                        show-password
+                      ></el-input>
+                    </el-form-item>
+                  </el-form>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div class="login-btn">
-            <el-button @click="resetForm('ruleForm')" round icon="el-icon-circle-close"
+            <el-button
+              round
+              icon="el-icon-circle-close"
+              v-if="activeName === 'login'"
+              @click="resetForm('ruleForm')"
               >重置</el-button
             >
             <el-button
-              type="primary"
-              @click="submitForm('ruleForm')"
               round
+              type="primary"
               icon="el-icon-user-solid"
+              v-if="activeName === 'login'"
+              @click="submitForm('ruleForm')"
               >登录</el-button
+            >
+            <el-button
+              round
+              icon="el-icon-circle-close"
+              v-if="activeName === 'register'"
+              @click="resetForm('registerRuleForm')"
+              >重置</el-button
+            >
+            <el-button
+              round
+              type="primary"
+              icon="el-icon-check"
+              v-if="activeName === 'register'"
+              @click="submitForm('registerRuleForm')"
+              >提交</el-button
             >
           </div>
         </div>
@@ -59,47 +143,113 @@
 </template>
 
 <script>
+import { register, login } from '@/api/user'
 export default {
   name: 'index',
-  data () {
+  data() {
     var validatePassword = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'));
+      if (!value) {
+        callback(new Error('请输入密码'))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
+    var uPattern = /^[A-Za-z0-9]+$/ // 用户名正则，用户名必须为2-12位字母/数字
+    var pPattern = /^[\S]{6,12}$/ // 密码正则
+    var validateUserName = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入用户名'))
+      } else if (!uPattern.test(value)) {
+        callback(new Error('请正确输入，用户名必须为/数字/字母'))
+      } else {
+        callback()
+      }
+    }
+    var validatePass = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入密码'))
+      } else if (!pPattern.test(value)) {
+        callback(new Error('请正确输入，6到12位的密码'))
+      } else {
+        if (this.registerRuleForm.checkPass !== '') {
+          this.$refs.registerRuleForm.validateField('checkPass')
+        }
+        callback()
+      }
+    }
+    var validatePass2 = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请再次输入密码'))
+      } else if (value !== this.registerRuleForm.password) {
+        callback(new Error('两次输入密码不一致!'))
+      } else {
+        callback()
+      }
+    }
     return {
+      activeName: 'login',
       ruleForm: {
         username: '',
         password: ''
       },
+      registerRuleForm: {
+        username: '',
+        password: '',
+        checkPass: ''
+      },
       rules: {
+        username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+        password: [{ validator: validatePassword, trigger: 'blur' }]
+      },
+      registerRules: {
         username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 2, max: 12, message: '长度在 2 到 12 个字符', trigger: 'blur' },
+          { validator: validateUserName, trigger: 'blur' }
         ],
-        password: [
-          { validator: validatePassword, trigger: 'blur' }
-        ]
+        password: [{ validator: validatePass, trigger: 'blur' }],
+        checkPass: [{ validator: validatePass2, trigger: 'blur' }]
       }
     }
   },
   components: {},
   watch: {},
-  mounted () { },
+  mounted() {},
   methods: {
-    submitForm (formName) {
+    submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert('submit!');
+          console.log(formName)
+          if (formName === 'registerRuleForm') {
+            const params = this.registerRuleForm
+            register(params).then((res) => {
+              if (res.status === 0) {
+                this.$message.success(res.message)
+              }
+            })
+          } else if (formName === 'ruleForm') {
+            const params = this.ruleForm
+            login(params).then((res) => {
+              if (res.status === 0) {
+                debugger
+                this.$message.success(res.message)
+              }
+            })
+          }
         } else {
-          console.log('error submit!!');
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    resetForm (formName) {
-      this.$refs[formName].resetFields();
+    resetForm(formName) {
+      this.$refs[formName].resetFields()
+    },
+    handleSwitch(num) {
+      this.activeName = num === 0 ? 'login' : 'register'
+      const formName = num === 0 ? 'ruleForm' : 'registerRuleForm'
+      this.$nextTick(() => {
+        this.$refs[formName].resetFields()
+      })
     }
   }
 }
@@ -126,22 +276,38 @@ export default {
     background-color: #fffc;
     border-radius: 10px;
     box-sizing: border-box;
+    position: relative;
+    .surfing {
+      position: absolute;
+      top: 27px;
+      right: 27px;
+      width: 120px;
+      animation: a 4s ease-in-out infinite alternate;
+      flex-shrink: 0;
+      transform-origin: 50% 50%;
+      z-index: 2;
+    }
+    @keyframes a {
+      0% {
+        transform: translateZ(0);
+      }
+      50% {
+        transform: translate3d(-1.5rem, -1.5rem, 0);
+      }
+      100% {
+        transform: translateZ(0);
+      }
+    }
     .content-left {
-      width: 800px;
+      width: 50%;
       img {
-        width: 100%;
-        height: 100%;
+        width: 90%;
+        height: 90%;
       }
     }
 
     .content-right {
-      width: 500px;
-      height: 395px;
-      flex-shrink: 0;
-      position: relative;
       .login-form {
-        position: absolute;
-        z-index: 2;
         width: 420px;
         padding: 50px 40px 45px;
         background-color: #fffffffa;
@@ -149,13 +315,12 @@ export default {
         box-shadow: 2px 3px 7px #0003;
         z-index: 3;
         .el-form-item {
-          margin-bottom: 40px;
+          margin-bottom: 30px;
         }
         .login-btn {
           display: flex;
           justify-content: space-between;
           width: 100%;
-          margin-top: 40px;
           white-space: nowrap;
           .el-button {
             width: 185px;
@@ -168,7 +333,7 @@ export default {
           display: flex;
           justify-content: center;
           align-items: center;
-          margin-bottom: 45px;
+          margin-bottom: 30px;
           .login-icon {
             width: 52px;
             height: 52px;
@@ -181,26 +346,33 @@ export default {
             white-space: nowrap;
           }
         }
-      }
-      .surfing {
-        position: absolute;
-        top: -100px;
-        right: -100px;
-        width: 120px;
-        animation: a 4s ease-in-out infinite alternate;
-        flex-shrink: 0;
-        transform-origin: 50% 50%;
-        z-index: 2;
-      }
-      @keyframes a {
-        0% {
-          transform: translateZ(0);
-        }
-        50% {
-          transform: translate3d(-1.5rem, -1.5rem, 0);
-        }
-        100% {
-          transform: translateZ(0);
+        .tabs {
+          border-top-left-radius: 10px;
+          border-top-right-radius: 10px;
+          overflow: hidden;
+          outline: none;
+          .tab-title {
+            display: flex;
+            .tab-item {
+              width: 50%;
+              color: #96989e;
+              background-color: #f5f5f5;
+              text-align: center;
+              padding: 10px 0;
+              cursor: pointer;
+              &:hover {
+                background-color: #66b1ff;
+                color: #fff;
+              }
+            }
+            .active {
+              color: #fff;
+              background: #66b1ff;
+            }
+          }
+          .tab-content {
+            margin-top: 35px;
+          }
         }
       }
     }
