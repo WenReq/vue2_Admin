@@ -1,5 +1,12 @@
+/*
+ * @Descripttion:
+ * @Author: voanit
+ * @Date: 2022-06-14 20:44:31
+ * @LastEditors: voanit
+ * @LastEditTime: 2022-06-14 22:50:49
+ */
 // import Vue from "vue";
-import axios from "axios";
+import axios from 'axios'
 // import router from "@/router";
 
 const baseURL = process.env.VUE_APP_HOST
@@ -13,12 +20,11 @@ const _axios = axios.create(config)
 
 _axios.interceptors.request.use(
   (config) => {
-    // debugger
-    // const token = localStorage.getItem('ACCESS_TOKEN')
-    // if (token) {
-    //   config.headers['authorization'] = token
-    // }
-    config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    const token = localStorage.getItem('ACCESS_TOKEN')
+    if (token) {
+      config.headers['authorization'] = token
+    }
+    config.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
     return config
   },
   (error) => {
@@ -28,11 +34,7 @@ _axios.interceptors.request.use(
 
 _axios.interceptors.response.use(
   (response) => {
-    debugger
-    const {
-      status,
-      message
-    } = response.data
+    const { status, message } = response.data
     if (status === 0) {
       return Promise.resolve(response)
     }

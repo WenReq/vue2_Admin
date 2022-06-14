@@ -3,11 +3,9 @@
  * @Author: voanit
  * @Date: 2022-06-13 21:40:47
  * @LastEditors: voanit
- * @LastEditTime: 2022-06-13 22:27:34
+ * @LastEditTime: 2022-06-14 22:23:21
  */
-const {
-  defineConfig
-} = require('@vue/cli-service')
+const { defineConfig } = require('@vue/cli-service')
 const path = require('path')
 
 function resolve(dir) {
@@ -22,15 +20,15 @@ module.exports = defineConfig({
   devServer: {
     open: true,
     port: 8088,
-    host: '192.168.1.54',
+    host: '127.0.0.1',
     https: false,
     hot: 'only',
     proxy: {
       '/api': {
-        target: `http://192.168.1.54:3307`,
+        target: `http://127.0.0.1:3307`,
         changeOrigin: true,
         pathRewrite: {
-          '^/api': 'http://192.168.1.54:3307'
+          '^/api': '/api'
         }
       }
     }

@@ -23,7 +23,7 @@
               </div>
               <div
                 class="tab-item"
-                :class="activeName === 'register' ? 'active' : ''"
+                :class="activeName === 'reguser' ? 'active' : ''"
                 @click="handleSwitch(1)"
               >
                 注册
@@ -61,7 +61,7 @@
                   </el-form>
                 </div>
               </div>
-              <div class="tab-pane" v-if="activeName === 'register'">
+              <div class="tab-pane" v-if="activeName === 'reguser'">
                 <div>
                   <el-form
                     :model="registerRuleForm"
@@ -123,7 +123,7 @@
             <el-button
               round
               icon="el-icon-circle-close"
-              v-if="activeName === 'register'"
+              v-if="activeName === 'reguser'"
               @click="resetForm('registerRuleForm')"
               >重置</el-button
             >
@@ -131,7 +131,7 @@
               round
               type="primary"
               icon="el-icon-check"
-              v-if="activeName === 'register'"
+              v-if="activeName === 'reguser'"
               @click="submitForm('registerRuleForm')"
               >提交</el-button
             >
@@ -143,10 +143,10 @@
 </template>
 
 <script>
-import { register, login } from '@/api/user'
+import { reguser, login } from '@/api/user'
 export default {
   name: 'index',
-  data() {
+  data () {
     var validatePassword = (rule, value, callback) => {
       if (!value) {
         callback(new Error('请输入密码'))
@@ -213,25 +213,29 @@ export default {
   },
   components: {},
   watch: {},
-  mounted() {},
+  mounted () { },
   methods: {
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(formName)
+          let param = new URLSearchParams();
           if (formName === 'registerRuleForm') {
-            const params = this.registerRuleForm
-            register(params).then((res) => {
+            param.append("username", this.registerRuleForm.username);
+            param.append("password", this.registerRuleForm.password);
+            reguser(param).then((res) => {
               if (res.status === 0) {
                 this.$message.success(res.message)
               }
             })
           } else if (formName === 'ruleForm') {
-            const params = this.ruleForm
-            login(params).then((res) => {
+            param.append("username", this.ruleForm.username);
+            param.append("password", this.ruleForm.password);
+            login(param).then((res) => {
               if (res.status === 0) {
-                debugger
                 this.$message.success(res.message)
+                this.$router.push({
+                  path: 'home'
+                })
               }
             })
           }
@@ -241,12 +245,15 @@ export default {
         }
       })
     },
-    resetForm(formName) {
+    resetForm (formName) {
       this.$refs[formName].resetFields()
     },
-    handleSwitch(num) {
-      this.activeName = num === 0 ? 'login' : 'register'
+    handleSwitch (num) {
+      this.activeName = num === 0 ? 'login' : 'reguser'
       const formName = num === 0 ? 'ruleForm' : 'registerRuleForm'
+      if (num === 1) {
+        this.registerRuleForm.checkPass = ''
+      }
       this.$nextTick(() => {
         this.$refs[formName].resetFields()
       })
@@ -307,6 +314,7 @@ export default {
     }
 
     .content-right {
+      z-index: 3;
       .login-form {
         width: 420px;
         padding: 50px 40px 45px;

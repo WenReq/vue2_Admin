@@ -1,10 +1,7 @@
-import {
-  httpGet,
-  httpPost
-} from "./request";
+import { httpGet, httpPost } from './request'
 
-export function register(data) {
-  return httpPost('/api/register', data)
+export function reguser(data) {
+  return httpPost('/api/reguser', data)
 }
 
 export function login(data) {
