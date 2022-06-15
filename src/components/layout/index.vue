@@ -3,7 +3,7 @@
     <el-container>
       <el-aside width="200px">Aside</el-aside>
       <el-container>
-        <el-header>
+        <el-header style="height: auto">
           <div class="header">
             <div class="header-lf flx-center">
               <i class="el-icon-s-fold collapse-icon"></i>
@@ -16,9 +16,42 @@
             </div>
             <div class="header-ri flx-center">
               <span class="username"> WenShaoChang </span>
+              <el-dropdown trigger="click">
+                <dvi class="avatar">
+                  <img src="@/assets/img/avatar.gif" alt="avatar" srcset="" />
+                </dvi>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>个人资料</el-dropdown-item>
+                  <el-dropdown-item>修改密码</el-dropdown-item>
+                  <el-dropdown-item divided>退出登陆</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
             </div>
           </div>
-          <div class="tabs-box"></div>
+          <div class="tabs-box">
+            <div class="tabs-menu">
+              <el-tabs
+                v-model="tabsMenuValue"
+                type="card"
+                @tab-click="tabClick"
+                @tab-remove="removeTab"
+              >
+                <el-tab-pane
+                  v-for="item in tabsMenuList"
+                  :key="item.path"
+                  :path="item.path"
+                  :label="item.title"
+                  :name="item.path"
+                  :closable="item.close"
+                >
+                  <template #label>
+                    <i v-if="item.icon" :class="item.icon"></i>
+                    {{ item.title }}
+                  </template>
+                </el-tab-pane>
+              </el-tabs>
+            </div>
+          </div>
         </el-header>
         <el-main>
           <div class="main-box">
@@ -39,10 +72,21 @@
 export default {
   name: 'layout',
   data() {
-    return {}
+    return {
+      tabsMenuValue: '/home',
+      tabsMenuList: [
+        {
+          path: '/home',
+          title: '首页',
+          close: false,
+          icon: 'el-icon-s-home'
+        }
+      ]
+    }
   },
   components: {},
   watch: {},
+  computed: {},
   mounted() {},
   methods: {}
 }
@@ -79,11 +123,44 @@ export default {
         font-size: 15px;
         color: #000000bf;
       }
+      .avatar {
+        width: 40px;
+        height: 40px;
+        overflow: hidden;
+        cursor: pointer;
+        border-radius: 50%;
+        display: flex;
+      }
     }
     .flx-center {
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+  }
+  .tabs-box {
+    .tabs-menu {
+      position: relative;
+      width: 100%;
+      ::v-deep .el-tabs {
+        .el-tabs__header {
+          box-sizing: border-box;
+          height: 40px;
+          padding: 0 10px;
+          margin: 0;
+          border-bottom: 1px solid #e4e7ed;
+          .el-tabs__item {
+            border: none;
+          }
+          .el-tabs__item.is-active {
+            color: #406eff;
+            border-bottom: 2px solid #406eff;
+          }
+          .el-tabs__nav {
+            border: none;
+          }
+        }
+      }
     }
   }
 }
