@@ -1,11 +1,13 @@
 /*
- * @Descripttion:
+ * @Description: 项目配置项
  * @Author: voanit
  * @Date: 2022-06-13 21:40:47
  * @LastEditors: voanit
  * @LastEditTime: 2022-06-14 22:23:21
  */
-const { defineConfig } = require('@vue/cli-service')
+const {
+  defineConfig
+} = require('@vue/cli-service')
 const path = require('path')
 
 function resolve(dir) {

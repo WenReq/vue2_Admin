@@ -1,5 +1,5 @@
 /*
- * @Descripttion:
+ * @Description: 项目入口文件
  * @Author: voanit
  * @Date: 2022-06-13 21:40:47
  * @LastEditors: voanit

@@ -1,1 +1,1 @@
-// import '@/core/axios'
+import '@/core/permission'

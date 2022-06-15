@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // import HomeView from "../views/HomeView.vue";
+import main from '@/components/layout/index.vue'
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
+const routes = [{
     path: '/',
     redirect: {
       name: 'login'
@@ -17,12 +17,33 @@ const routes = [
     component: () => import('@/views/login/index.vue')
   },
   {
-    path: '/home',
-    name: 'home',
-    // route level code-splitting
-    // this generates a separate chunk (home.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "home" */ '../views/HomeView.vue')
+    path: '/main',
+    component: main,
+    redirect: {
+      path: '/home'
+    },
+    meta: {
+      title: '主入口整体布局'
+    },
+    children: [{
+      path: '/home',
+      name: 'home',
+      meta: {
+        title: '首页'
+      },
+      component: () => import( /* webpackChunkName: "home" */ '../views/HomeView.vue'),
+    }, ]
+  },
+  {
+    path: '/error',
+    name: 'error',
+    component: () => import('@/views/common/error.vue')
+  },
+  {
+    path: '*',
+    redirect: {
+      name: 'error'
+    }
   }
 ]
 

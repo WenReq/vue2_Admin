@@ -1,7 +1,7 @@
 <template>
   <div class="container center">
+    <img class="surfing" src="@/assets/svg/aircraft.svg" alt="" srcset="" />
     <div class="login-content">
-      <img class="surfing" src="@/assets/svg/aircraft.svg" alt="" srcset="" />
       <div class="content-left">
         <img src="@/assets/svg/login_left4.png" alt="" srcset="" />
         <!-- <img class="aircraft" src="@/assets/svg/aircraft.svg" alt="" srcset="" /> -->
@@ -118,6 +118,7 @@
               icon="el-icon-user-solid"
               v-if="activeName === 'login'"
               @click="submitForm('ruleForm')"
+              :loading="loginLoading"
               >登录</el-button
             >
             <el-button
@@ -133,6 +134,7 @@
               icon="el-icon-check"
               v-if="activeName === 'reguser'"
               @click="submitForm('registerRuleForm')"
+              :loading="loginLoading"
               >提交</el-button
             >
           </div>
@@ -146,7 +148,7 @@
 import { reguser, login } from '@/api/user'
 export default {
   name: 'index',
-  data () {
+  data() {
     var validatePassword = (rule, value, callback) => {
       if (!value) {
         callback(new Error('请输入密码'))
@@ -188,6 +190,7 @@ export default {
     }
     return {
       activeName: 'login',
+      loginLoading: false,
       ruleForm: {
         username: '',
         password: ''
@@ -213,42 +216,55 @@ export default {
   },
   components: {},
   watch: {},
-  mounted () { },
+  mounted() {},
   methods: {
-    submitForm (formName) {
+    submitForm(formName) {
+      this.loginLoading = true
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let param = new URLSearchParams();
+          let param = new URLSearchParams()
           if (formName === 'registerRuleForm') {
-            param.append("username", this.registerRuleForm.username);
-            param.append("password", this.registerRuleForm.password);
+            // 注册
+            param.append('username', this.registerRuleForm.username)
+            param.append('password', this.registerRuleForm.password)
             reguser(param).then((res) => {
               if (res.status === 0) {
                 this.$message.success(res.message)
+                this.activeName = 'login'
+                this.$nextTick(() => {
+                  this.$refs['ruleForm'] && this.$refs['ruleForm'].resetFields()
+                  const { username, password } = this.registerRuleForm
+                  this.ruleForm.username = username
+                  this.ruleForm.password = password
+                })
               }
             })
           } else if (formName === 'ruleForm') {
-            param.append("username", this.ruleForm.username);
-            param.append("password", this.ruleForm.password);
+            // 登陆
+            param.append('username', this.ruleForm.username)
+            param.append('password', this.ruleForm.password)
             login(param).then((res) => {
               if (res.status === 0) {
                 this.$message.success(res.message)
+                localStorage.setItem('ACCESS_TOKEN', res.token)
                 this.$router.push({
                   path: 'home'
                 })
               }
             })
           }
+          this.loginLoading = false
         } else {
+          this.loginLoading = false
           console.log('error submit!!')
           return false
         }
       })
     },
-    resetForm (formName) {
+    resetForm(formName) {
       this.$refs[formName].resetFields()
     },
-    handleSwitch (num) {
+    handleSwitch(num) {
       this.activeName = num === 0 ? 'login' : 'reguser'
       const formName = num === 0 ? 'ruleForm' : 'registerRuleForm'
       if (num === 1) {
@@ -272,6 +288,28 @@ export default {
   background-position: 50%;
   background-size: 100% 100%;
   background-size: cover;
+  position: relative;
+  overflow: hidden;
+  .surfing {
+    position: absolute;
+    top: 250px;
+    right: -35px;
+    width: 150px;
+    animation: a 13s ease-in-out infinite alternate;
+    flex-shrink: 0;
+    transform-origin: 50% 50%;
+  }
+  @keyframes a {
+    0% {
+      transform: translateZ(0);
+    }
+    50% {
+      transform: translate3d(-7rem, -5rem, 0);
+    }
+    100% {
+      transform: translateZ(0);
+    }
+  }
   .login-content {
     display: flex;
     justify-content: space-around;
@@ -283,28 +321,7 @@ export default {
     background-color: #fffc;
     border-radius: 10px;
     box-sizing: border-box;
-    position: relative;
-    .surfing {
-      position: absolute;
-      top: 27px;
-      right: 27px;
-      width: 120px;
-      animation: a 4s ease-in-out infinite alternate;
-      flex-shrink: 0;
-      transform-origin: 50% 50%;
-      z-index: 2;
-    }
-    @keyframes a {
-      0% {
-        transform: translateZ(0);
-      }
-      50% {
-        transform: translate3d(-1.5rem, -1.5rem, 0);
-      }
-      100% {
-        transform: translateZ(0);
-      }
-    }
+    z-index: 2;
     .content-left {
       width: 50%;
       img {
