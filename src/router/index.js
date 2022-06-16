@@ -6,8 +6,9 @@ import asyncRouter from './asyncRouter'
 
 Vue.use(VueRouter)
 
-const routes = [{
-    path: '/',
+const routes = [
+  {
+    path: '/login',
     redirect: {
       name: 'login'
     }
@@ -18,7 +19,7 @@ const routes = [{
     component: () => import('@/views/login/index.vue')
   },
   {
-    path: '/main',
+    path: '/',
     component: main,
     redirect: {
       path: '/home'
@@ -35,6 +36,7 @@ const routes = [{
   },
   {
     path: '*',
+    // redirect: '/error',
     redirect: {
       name: 'error'
     }

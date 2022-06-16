@@ -71,7 +71,7 @@
 <script>
 export default {
   name: 'layout',
-  data() {
+  data () {
     return {
       tabsMenuValue: '/home',
       tabsMenuList: [
@@ -87,16 +87,16 @@ export default {
   components: {},
   watch: {},
   computed: {},
-  mounted() {},
+  mounted () { },
   methods: {
-    handleLayout() {
-      debugger
+    handleLayout () {
+      localStorage.removeItem('ACCESS_TOKEN')
       this.$router.push({
         path: '/login'
       })
     },
-    tabClick() {},
-    removeTab() {}
+    tabClick () { },
+    removeTab () { }
   }
 }
 </script>
