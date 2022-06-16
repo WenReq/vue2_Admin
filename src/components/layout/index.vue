@@ -17,13 +17,13 @@
             <div class="header-ri flx-center">
               <span class="username"> WenShaoChang </span>
               <el-dropdown trigger="click">
-                <dvi class="avatar">
+                <div class="avatar">
                   <img src="@/assets/img/avatar.gif" alt="avatar" srcset="" />
-                </dvi>
+                </div>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>个人资料</el-dropdown-item>
                   <el-dropdown-item>修改密码</el-dropdown-item>
-                  <el-dropdown-item divided>退出登陆</el-dropdown-item>
+                  <el-dropdown-item divided @click.native="handleLayout">退出登陆</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
@@ -88,7 +88,16 @@ export default {
   watch: {},
   computed: {},
   mounted() {},
-  methods: {}
+  methods: {
+    handleLayout() {
+      debugger
+      this.$router.push({
+        path: '/login'
+      })
+    },
+    tabClick() {},
+    removeTab() {}
+  }
 }
 </script>
 

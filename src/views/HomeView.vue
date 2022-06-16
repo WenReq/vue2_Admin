@@ -16,8 +16,7 @@ export default {
   justify-content: center;
   align-items: center;
   img {
-    width: 80%;
-    margin-bottom: 25px;
+    width: 75%;
   }
 }
 </style>

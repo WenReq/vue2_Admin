@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 // import HomeView from "../views/HomeView.vue";
 import main from '@/components/layout/index.vue'
+import asyncRouter from './asyncRouter'
 
 Vue.use(VueRouter)
 
@@ -25,14 +26,7 @@ const routes = [{
     meta: {
       title: '主入口整体布局'
     },
-    children: [{
-      path: '/home',
-      name: 'home',
-      meta: {
-        title: '首页'
-      },
-      component: () => import( /* webpackChunkName: "home" */ '../views/HomeView.vue'),
-    }, ]
+    children: [...asyncRouter]
   },
   {
     path: '/error',
