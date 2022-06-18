@@ -56,6 +56,7 @@
                         placeholder="密码：123456"
                         autocomplete="off"
                         show-password
+                        @keyup.enter.native="submitForm('ruleForm')"
                       ></el-input>
                     </el-form-item>
                   </el-form>
@@ -148,7 +149,7 @@
 import { reguser, login } from '@/api/user'
 export default {
   name: 'index',
-  data() {
+  data () {
     var validatePassword = (rule, value, callback) => {
       if (!value) {
         callback(new Error('请输入密码'))
@@ -216,9 +217,9 @@ export default {
   },
   components: {},
   watch: {},
-  mounted() {},
+  mounted () { },
   methods: {
-    submitForm(formName) {
+    submitForm (formName) {
       this.loginLoading = true
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -260,10 +261,10 @@ export default {
         }
       })
     },
-    resetForm(formName) {
+    resetForm (formName) {
       this.$refs[formName].resetFields()
     },
-    handleSwitch(num) {
+    handleSwitch (num) {
       this.activeName = num === 0 ? 'login' : 'reguser'
       const formName = num === 0 ? 'ruleForm' : 'registerRuleForm'
       if (num === 1) {

@@ -1,1 +1,1 @@
-import '@/core/permission'
+import './permission' // router 的守卫

@@ -1,17 +1,19 @@
 <template>
   <div class="layout">
-    <el-container>
-      <el-aside width="200px">Aside</el-aside>
-      <el-container>
+    <el-container class="el-container">
+      <el-aside width="auto">
+        <Aside :isCollapse="isCollapse"></Aside>
+      </el-aside>
+      <el-container class="el-container">
         <el-header style="height: auto">
           <div class="header">
             <div class="header-lf flx-center">
-              <i class="el-icon-s-fold collapse-icon"></i>
+              <i class="el-icon-s-fold collapse-icon" @click="isCollapse = !isCollapse"></i>
               <el-breadcrumb separator="/">
                 <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
+                <!-- <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
                 <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-                <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+                <el-breadcrumb-item>活动详情</el-breadcrumb-item> -->
               </el-breadcrumb>
             </div>
             <div class="header-ri flx-center">
@@ -54,13 +56,13 @@
           </div>
         </el-header>
         <el-main>
-          <div class="main-box">
+          <section class="main-box">
             <router-view></router-view>
-          </div>
+          </section>
         </el-main>
         <div class="footer">
-          <a href="https://www.wenreq.site/blog/" target="_blank"
-            >2022 © Vue2-Admin By WenShaoChang Technology.</a
+          <a href="https://www.wenreq.site/" target="_blank"
+            >2022 © Vue2 Admin By WenShaoChang Technology.</a
           >
         </div>
       </el-container>
@@ -69,10 +71,12 @@
 </template>
 
 <script>
+import Aside from './aside.vue'
 export default {
   name: 'layout',
   data () {
     return {
+      isCollapse: false,
       tabsMenuValue: '/home',
       tabsMenuList: [
         {
@@ -84,15 +88,21 @@ export default {
       ]
     }
   },
-  components: {},
+  components: { Aside },
   watch: {},
   computed: {},
   mounted () { },
   methods: {
     handleLayout () {
-      localStorage.removeItem('ACCESS_TOKEN')
-      this.$router.push({
-        path: '/login'
+      this.$confirm('您是否确认退出登录?', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        localStorage.removeItem('ACCESS_TOKEN')
+        this.$router.push({
+          path: '/login'
+        })
       })
     },
     tabClick () { },
@@ -102,6 +112,15 @@ export default {
 </script>
 
 <style scoped lang="less">
+.layout {
+  height: 100vh;
+}
+.el-container {
+  display: flex;
+  width: 100%;
+  min-width: 970px;
+  height: 100%;
+}
 .el-header {
   height: auto;
   padding: 0;
@@ -189,10 +208,9 @@ export default {
 }
 
 .el-aside {
-  background-color: #d3dce6;
-  color: #333;
-  text-align: center;
-  height: calc(100vh);
+  width: auto;
+  overflow: inherit;
+  background-color: #191a20;
 }
 
 .el-main {

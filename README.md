@@ -1,4 +1,4 @@
-# WSCv2_web
+# Vue2 Admin
 
 ## Project setup
 

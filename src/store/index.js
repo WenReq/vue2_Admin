@@ -2,7 +2,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import users from './modules/users'
-import menu from './modules/menu'
 
 Vue.use(Vuex)
 
@@ -12,9 +11,8 @@ export default new Vuex.Store({
   // 不要在发布环境下启用严格模式！严格模式会深度监测状态树来检测不合规的状态变更——请确保在发布环境下关闭严格模式，以避免性能损失。
   strict: process.env.NODE_ENV !== 'production',
   modules: {
-    users,
-    menu
-  },
+    users
+  }
 })
 
 /**
@@ -88,25 +86,25 @@ export default new Vuex.Store({
  *      actions: { increment (context) { context.commit('increment') } }
  *    Action 函数接受一个与 store 实例具有相同方法和属性的 context 对象， 因此你可以调用 context.commit 提交一个 mutation， 或者通过 context.state 和 context.getters 来获取 state 和 getters。
  *    实践中， 我们会经常用到 ES2015 的 参数解构(opens new window) 来简化代码（ 特别是我们需要调用 commit 很多次的时候）：actions: { increment ({ commit }) { commit('increment') } }
- * 
+ *
  *    分发 Action
  *      store.dispatch('increment')
  *      mutation 必须同步执行。 Action 就不受约束！ 我们可以在 action 内部执行异步操作：
  *      actions: { incrementAsync ({ commit }) { setTimeout(() => { commit('increment') }, 1000) } }
- * 
+ *
  *    在组件中分发 Action
  *      this.$store.dispatch('xxx')
- * 
+ *
  *    组合 Action
  *      store.dispatch 可以处理被触发的 action 的处理函数返回的 Promise， 并且 store.dispatch 仍旧返回 Promise：
  * - Module
  *    Vuex 允许我们将 store 分割成模块（ module）。 每个模块拥有自己的 state、 mutation、 action、 getter、 甚至是嵌套子模块—— 从上至下进行同样方式的分割：
- * 
+ *
  *    模块的局部状态
  *      对于模块内部的 mutation 和 getter， 接收的第一个参数是模块的局部状态对象。
  *      同样， 对于模块内部的 action， 局部状态通过 context.state 暴露出来， 根节点状态则为 context.rootState：
  *      对于模块内部的 getter， 根节点状态会作为第三个参数暴露出来：
- * 
+ *
  *    命名空间
  *      通过添加 namespaced: true 的方式使其成为带命名空间的模块。 当模块被注册后， 它的所有 getter、 action 及 mutation 都会自动根据模块注册的路径调整命名。
  *        getters: { isAdmin () { ... } // -> getters['account/isAdmin'] }
