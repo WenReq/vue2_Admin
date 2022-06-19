@@ -7,6 +7,7 @@ import sysMenu from '../../router/asyncRouter'
 const state = () => {
   accessToken: ''
   userMenu: []
+  selectMenu: []
 }
 
 // getters
@@ -19,6 +20,9 @@ const mutations = {
   },
   setMenu(state, menu) {
     state.userMenu = menu
+  },
+  setSelectMenu(state, selectMenu) {
+    state.selectMenu = selectMenu
   }
 }
 

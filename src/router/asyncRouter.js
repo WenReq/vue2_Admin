@@ -6,33 +6,48 @@ export default [
   {
     path: '/home',
     name: 'home',
+    index: '1',
     meta: {
       id: 1,
-      title: '首页'
+      title: '首页',
+      icon: 'el-icon-s-home'
     },
     component: () => import(/* webpackChunkName: "home" */ '@/views/HomeView.vue')
   },
   {
     path: '/component',
     name: 'Component',
+    redirect: {
+      name: 'Table'
+    },
+    index: '2',
     meta: {
+      id: 2,
       title: '公用组件',
-      id: 2
+      icon: 'el-icon-setting'
     },
     component: () => import('@/views/component/table/list.vue'),
     children: [
       {
         path: '', // 如果你想要渲染点什么，可以提供一个 空的 子路由
-        component: HomeView
+        component: HomeView,
+        index: '2-0',
+        meta: {
+          parentId: 2,
+          title: '空跳转',
+          icon: 'el-icon-s-order'
+        }
       },
       {
         // 要注意，以 / 开头的嵌套路径会被当作根路径。 这让你充分的使用嵌套组件而无须设置嵌套的路径。
         // path: '/table',
         path: 'table',
         name: 'Table',
+        index: '2-1',
         meta: {
           parentId: 2,
-          title: 'Table组件'
+          title: 'Table组件',
+          icon: 'el-icon-s-order'
         },
         component: () => import(/* webpackChunkName: "Table" */ '@/views/component/table/list.vue')
       }

@@ -2,7 +2,7 @@
   <div class="layout">
     <el-container class="el-container">
       <el-aside width="auto">
-        <Aside :isCollapse="isCollapse"></Aside>
+        <Aside :isCollapse="isCollapse" @selectMenuItem="pathBugFun"></Aside>
       </el-aside>
       <el-container class="el-container">
         <el-header style="height: auto">
@@ -10,10 +10,9 @@
             <div class="header-lf flx-center">
               <i class="el-icon-s-fold collapse-icon" @click="isCollapse = !isCollapse"></i>
               <el-breadcrumb separator="/">
-                <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                <!-- <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
-                <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-                <el-breadcrumb-item>活动详情</el-breadcrumb-item> -->
+                <el-breadcrumb-item v-for="item in selectMenu" :key="item.index">{{
+                  item.title
+                }}</el-breadcrumb-item>
               </el-breadcrumb>
             </div>
             <div class="header-ri flx-center">
@@ -85,12 +84,17 @@ export default {
           close: false,
           icon: 'el-icon-s-home'
         }
-      ]
+      ],
+      selectMenu: this.$store.state.users.selectMenu
     }
   },
   components: { Aside },
   watch: {},
-  computed: {},
+  computed: {
+    // selectMenu () {
+    //   return this.$store.state.users.selectMenu
+    // }
+  },
   mounted () { },
   methods: {
     handleLayout () {
@@ -100,13 +104,17 @@ export default {
         type: 'warning'
       }).then(() => {
         localStorage.removeItem('ACCESS_TOKEN')
+        localStorage.removeItem('SELECT_MENU')
         this.$router.push({
           path: '/login'
         })
       })
     },
     tabClick () { },
-    removeTab () { }
+    removeTab () { },
+    pathBugFun (val) {
+      this.selectMenu = val
+    }
   }
 }
 </script>
