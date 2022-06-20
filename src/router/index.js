@@ -1,3 +1,10 @@
+/*
+ * @Descripttion:
+ * @Author: voanit
+ * @Date: 2022-06-16 19:43:07
+ * @LastEditors: voanit
+ * @LastEditTime: 2022-06-20 19:49:29
+ */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // import HomeView from "../views/HomeView.vue";
@@ -51,7 +58,11 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  // 切换页面，滚动到最顶部
+  scrollBehavior: () => {
+    return { x: 0, y: 0 }
+  }
 })
 
 export default router

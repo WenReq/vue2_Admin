@@ -6,7 +6,7 @@
     </div>
     <div class="scollbar">
       <el-menu
-        default-active="1"
+        :default-active="calcDefault(tabsMenuValue)"
         class="el-menu-vertical-demo"
         :collapse="isCollapse"
         text-color="#bdbdc0"
@@ -42,16 +42,25 @@ export default {
   name: 'Aside',
   data () {
     return {
-      flatMenus: []
+      flatMenus: [],
     }
   },
-  props: [
-    'isCollapse'
-  ],
+  props: {
+    isCollapse: {
+      type: Boolean,
+      default: false
+    },
+  },
   computed: {
     userMenu () {
       return this.$store.state.users.userMenu
-    }
+    },
+    selectMenu () {
+      return this.$store.state.users.selectMenu
+    },
+    tabsMenuValue () {
+      return this.$store.state.users.tabsState.tabsMenuValue
+    },
   },
   created: function () {
     this.load()
@@ -74,6 +83,8 @@ export default {
       this.$store.commit('users/setSelectMenu', selectMenu)
       // TODO: 临时解决 vuex 数据不是响应式的问题
       this.$emit('selectMenuItem', selectMenu)
+      // 将不是首页菜单的 tabs 进行存储，用于应用级的 tbs，且支持可关闭
+      if (key !== '1') { this.handleTabMenus(selectMenu) }
       // 跳转对应的路由
       this.$router.push({
         path
@@ -97,9 +108,11 @@ export default {
     // 处理多级菜单嵌套的路径拼接
     handleMoreItem (list) {
       let path = ''
-      list.forEach((ele, idx) => {
+      list.forEach(ele => {
         const select = this.flatMenus.find(it => it.index === ele)
-        path += idx === 0 ? select.path : `/${select.path}`
+        if (select && select.path) {
+          path = select.path
+        }
       });
       return path
     },
@@ -115,12 +128,45 @@ export default {
       }
       // 多层级的菜单
       list.forEach((ele, idx) => {
-        let { path, index, meta } = this.flatMenus.find(it => it.index === ele)
-        path = idx === 0 ? path : `/${path}`
+        const { path, index, meta } = this.flatMenus.find(it => it.index === ele)
         const item = { path, index, title: meta.title, }
         selectArr.push(item)
       });
       return selectArr
+    },
+    // 对选中菜单项进行存储
+    handleTabMenus (selects) {
+      // 选中的菜单
+      const selectItem = selects[selects.length - 1]
+      // store 中存储的初始化 tabs
+      let tabsState = this.$store.state.users.tabsState
+      // store 中的 tabs 的路由集合
+      const pathList = tabsState.tabsMenuList.map(it => it.path)
+      // 如果当前选中的菜单在当前的集合中，则不做任何处理；只是将 tabs 和 菜单进行切换
+      if (pathList.includes(selectItem.path)) {
+        // tabs 处理
+        tabsState.tabsMenuValue = selectItem.path
+        localStorage.setItem('TABS_STATE', JSON.stringify(tabsState))
+        this.$store.commit('users/setTabsState', tabsState)
+        return
+      }
+      // 否则，需要将选中的菜单存储到 store 中，且存储在本地中，切换默认选中的菜单
+      let select = {
+        close: true,
+        path: selectItem.path,
+        title: selectItem.title,
+      }
+      // 添加选中的菜单
+      tabsState.tabsMenuList.push(select)
+      // 切换选中的默认菜单的值
+      tabsState.tabsMenuValue = select.path
+      localStorage.setItem('TABS_STATE', JSON.stringify(tabsState))
+      this.$store.commit('users/setTabsState', tabsState)
+    },
+    // 计算选中菜单的值
+    calcDefault (val) {
+      const match = this.flatMenus.find(it => it.path === val)
+      return match.index
     }
   },
 }

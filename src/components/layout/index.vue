@@ -76,16 +76,7 @@ export default {
   data () {
     return {
       isCollapse: false,
-      tabsMenuValue: '/home',
-      tabsMenuList: [
-        {
-          path: '/home',
-          title: '首页',
-          close: false,
-          icon: 'el-icon-s-home'
-        }
-      ],
-      selectMenu: this.$store.state.users.selectMenu
+      selectMenu: this.$store.state.users.selectMenu,
     }
   },
   components: { Aside },
@@ -93,7 +84,24 @@ export default {
   computed: {
     // selectMenu () {
     //   return this.$store.state.users.selectMenu
-    // }
+    // },
+    tabsMenuList () {
+      return this.$store.state.users.tabsState.tabsMenuList
+    },
+    tabsMenuValue: {
+      // getter
+      get: function () {
+        return this.$store.state.users.tabsState.tabsMenuValue
+      },
+      // setter
+      set: function (newValue) {
+        // 切换 tab 时，store 和 localStore 都要更改
+        let tabsState = this.$store.state.users.tabsState
+        tabsState.tabsMenuValue = newValue
+        localStorage.setItem('TABS_STATE', JSON.stringify(tabsState))
+        this.$store.commit('users/setTabsState', tabsState)
+      }
+    }
   },
   mounted () { },
   methods: {
@@ -110,8 +118,15 @@ export default {
         })
       })
     },
-    tabClick () { },
-    removeTab () { },
+    tabClick (val) {
+      this.$router.push({
+        path: val.name
+      })
+    },
+    removeTab (val) {
+      console.log(val)
+      let tabsState = this.$store.state.users.tabsState
+    },
     pathBugFun (val) {
       this.selectMenu = val
     }
