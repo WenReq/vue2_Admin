@@ -16,14 +16,14 @@
               </el-breadcrumb>
             </div>
             <div class="header-ri flx-center">
-              <span class="username"> WenShaoChang </span>
+              <span class="username"> {{ sysUserName }} </span>
               <el-dropdown trigger="click">
                 <div class="avatar">
                   <img src="@/assets/img/avatar.gif" alt="avatar" srcset="" />
                 </div>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item>个人资料</el-dropdown-item>
-                  <el-dropdown-item>修改密码</el-dropdown-item>
+                  <el-dropdown-item @click.native="handleUpdatePwd">修改密码</el-dropdown-item>
                   <el-dropdown-item divided @click.native="handleLayout">退出登陆</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
@@ -66,6 +66,23 @@
         </div>
       </el-container>
     </el-container>
+    <el-dialog title="修改密码" width="45%" :visible.sync="updatePwdVisibile" >
+      <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="原密码" prop="oldPass">
+          <el-input type="password" v-model="ruleForm.oldPass" autocomplete="off" placeholder="请输入原密码"></el-input>
+        </el-form-item>
+        <el-form-item label="新密码" prop="newPass">
+          <el-input type="password" v-model="ruleForm.newPass" autocomplete="off" placeholder="请输入新密码"></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="checkPass">
+          <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off" placeholder="请再次确认密码"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="resetForm('ruleForm')">取 消</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -75,8 +92,26 @@ export default {
   name: 'layout',
   data () {
     return {
+      sysUserName: '',
       isCollapse: false,
+      updatePwdVisibile: false,
       selectMenu: this.$store.state.users.selectMenu,
+      ruleForm: {
+        oldPass: '',
+        newPass: '',
+        checkPass: '',
+      },
+      rules: {
+        oldPass: [
+          { required: true, message: '原密码不能为空', trigger: 'blur' },
+        ],
+        newPass: [
+          { required: true, message: '新密码不能为空', trigger: 'blur' },
+        ],
+        checkPass: [
+          { required: true, message: '再次确认密码不能为空', trigger: 'blur' },
+        ],
+      }
     }
   },
   components: { Aside },
@@ -103,20 +138,48 @@ export default {
       }
     }
   },
+  created: function() { 
+    this.handleSysUsername();
+  },
   mounted () { },
   methods: {
+    handleSysUsername() {
+      this.sysUserName = localStorage.getItem('USER_NAME')
+    },
     handleLayout () {
       this.$confirm('您是否确认退出登录?', '温馨提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        localStorage.removeItem('USER_NAME')
         localStorage.removeItem('ACCESS_TOKEN')
         localStorage.removeItem('SELECT_MENU')
         this.$router.push({
           path: '/login'
         })
       })
+    },
+    handleUpdatePwd() {
+      this.updatePwdVisibile = true
+      this.$nextTick(() => {
+        this.$refs['ruleForm'].resetFields();
+      })
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+      this.updatePwdVisibile = false
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$message.success('密码修改成功')
+          this.resetForm(formName)
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      });
     },
     tabClick (val) {
       this.$router.push({
@@ -141,7 +204,6 @@ export default {
 .el-container {
   display: flex;
   width: 100%;
-  min-width: 970px;
   height: 100%;
 }
 .el-header {
