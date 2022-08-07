@@ -20,7 +20,7 @@ export function httpPost(url, params, config) {
   return new Promise((resolve, reject) => {
     _axios.post(url, params, {
       headers: {
-        'Content-Type': config['Content-Type'] || 'application/json;charset=utf-8'
+        'Content-Type': (config && config['Content-Type']) || 'application/json;charset=utf-8'
       }
     })
       .then(res => {

@@ -16,7 +16,7 @@
               </el-breadcrumb>
             </div>
             <div class="header-ri flx-center">
-              <span class="username"> {{ sysUserName }} </span>
+              <span class="username"> {{ nickname }} </span>
               <el-dropdown trigger="click">
                 <div class="avatar">
                   <img src="@/assets/img/avatar.gif" alt="avatar" srcset="" />
@@ -111,7 +111,7 @@ export default {
   name: 'layout',
   data () {
     return {
-      sysUserName: '',
+      nickname: '',
       isCollapse: false,
       userInfoVisibility: false,
       updatePwdVisibility: false,
@@ -168,7 +168,6 @@ export default {
     }
   },
   created: function() { 
-    this.handleSysUsername();
     this.getUserInfo();
   },
   mounted () { },
@@ -178,13 +177,11 @@ export default {
         const { status, message, data} = res
         if(status === 0) {
           this.userInfoForm = data || {}
+          this.nickname = data.nickname || ''
         } else {
           this.$message.error(message)
         }
       })
-    },
-    handleSysUsername() {
-      this.sysUserName = localStorage.getItem('USER_NAME')
     },
     handleLayout () {
       this.$confirm('您是否确认退出登录?', '温馨提示', {
@@ -231,15 +228,19 @@ export default {
     submitUserForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const { id, nickname, email } = this.userInfoForm
-          const params = { id, nickname, email }
+          let param = new URLSearchParams()
+          param.append('id', this.userInfoForm.id)
+          param.append('nickname', this.userInfoForm.nickname)
+          param.append('email', this.userInfoForm.email)
           const config = {
             'Content-Type': 'application/x-www-form-urlencoded'
           }
-          updateUserInfo(params, config).then(res => {
+          updateUserInfo(param, config).then(res => {
             const { status, message } = res
             if (status === 0) {
+              this.userInfoVisibility = false
               this.$message.success(message)
+              this.getUserInfo()
             } else {
               this.$message.error(message)
             }

@@ -47,7 +47,6 @@ const actions = {
             ],
             tabsMenuValue: '/home'
           }
-          localStorage.setItem('USER_NAME', userInfo.get('username'))
           localStorage.setItem('ACCESS_TOKEN', res.token)
           localStorage.setItem('USER_MENU', JSON.stringify(menu))
           localStorage.setItem('TABS_STATE', JSON.stringify(defaultTabsMenus))
