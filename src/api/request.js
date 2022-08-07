@@ -16,9 +16,13 @@ export function httpGet(url, params) {
   })
 }
 
-export function httpPost(url, params) {
+export function httpPost(url, params, config) {
   return new Promise((resolve, reject) => {
-    _axios.post(url, params)
+    _axios.post(url, params, {
+      headers: {
+        'Content-Type': config['Content-Type'] || 'application/json;charset=utf-8'
+      }
+    })
       .then(res => {
         resolve(res.data)
       })

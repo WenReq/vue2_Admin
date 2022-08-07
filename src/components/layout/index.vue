@@ -22,7 +22,7 @@
                   <img src="@/assets/img/avatar.gif" alt="avatar" srcset="" />
                 </div>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>个人资料</el-dropdown-item>
+                  <el-dropdown-item @click.native="handleUserInfo">个人资料</el-dropdown-item>
                   <el-dropdown-item @click.native="handleUpdatePwd">修改密码</el-dropdown-item>
                   <el-dropdown-item divided @click.native="handleLayout">退出登陆</el-dropdown-item>
                 </el-dropdown-menu>
@@ -66,7 +66,7 @@
         </div>
       </el-container>
     </el-container>
-    <el-dialog title="修改密码" width="45%" :visible.sync="updatePwdVisibile" >
+    <el-dialog title="修改密码" width="45%" :visible.sync="updatePwdVisibility" >
       <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="原密码" prop="oldPass">
           <el-input type="password" v-model="ruleForm.oldPass" autocomplete="off" placeholder="请输入原密码"></el-input>
@@ -83,10 +83,29 @@
         <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 个人资料 -->
+    <el-dialog title="个人资料" width="45%" :visible.sync="userInfoVisibility" >
+      <el-form :model="userInfoForm" status-icon :rules="userInfoRules" ref="userInfoForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="用户名">
+          <el-input v-model="userInfoForm.username" readonly autocomplete="off" placeholder="请输入用户名"></el-input>
+        </el-form-item>
+        <el-form-item label="昵称" prop="nickname">
+          <el-input v-model="userInfoForm.nickname" autocomplete="off" placeholder="请输入昵称"></el-input>
+        </el-form-item>
+        <el-form-item label="email" prop="email">
+          <el-input v-model="userInfoForm.email" autocomplete="off" placeholder="请输入邮箱"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="resetUserForm('userInfoForm')">取 消</el-button>
+        <el-button type="primary" @click="submitUserForm('userInfoForm')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { userinfo, updateUserInfo } from '@/api/user'
 import Aside from './aside.vue'
 export default {
   name: 'layout',
@@ -94,8 +113,18 @@ export default {
     return {
       sysUserName: '',
       isCollapse: false,
-      updatePwdVisibile: false,
+      userInfoVisibility: false,
+      updatePwdVisibility: false,
       selectMenu: this.$store.state.users.selectMenu,
+      userInfoForm: {},
+      userInfoRules: {
+        email: [
+          { required: true, message: '邮箱不能为空', trigger: 'blur' },
+        ],
+        nickname: [
+          { required: true, message: '昵称不能为空', trigger: 'blur' },
+        ],
+      },
       ruleForm: {
         oldPass: '',
         newPass: '',
@@ -140,9 +169,20 @@ export default {
   },
   created: function() { 
     this.handleSysUsername();
+    this.getUserInfo();
   },
   mounted () { },
   methods: {
+    getUserInfo: function() {
+      userinfo().then(res => {
+        const { status, message, data} = res
+        if(status === 0) {
+          this.userInfoForm = data || {}
+        } else {
+          this.$message.error(message)
+        }
+      })
+    },
     handleSysUsername() {
       this.sysUserName = localStorage.getItem('USER_NAME')
     },
@@ -160,20 +200,50 @@ export default {
         })
       })
     },
+    handleUserInfo() {
+      this.userInfoVisibility = true
+    },
     handleUpdatePwd() {
-      this.updatePwdVisibile = true
+      this.updatePwdVisibility = true
       this.$nextTick(() => {
         this.$refs['ruleForm'].resetFields();
       })
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-      this.updatePwdVisibile = false
+      this.updatePwdVisibility = false
+    },
+    resetUserForm(formName) {
+      this.$refs[formName].resetFields();
+      this.userInfoVisibility = false
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$message.success('密码修改成功')
+          this.resetForm(formName)
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      });
+    },
+    submitUserForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          const { id, nickname, email } = this.userInfoForm
+          const params = { id, nickname, email }
+          const config = {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+          updateUserInfo(params, config).then(res => {
+            const { status, message } = res
+            if (status === 0) {
+              this.$message.success(message)
+            } else {
+              this.$message.error(message)
+            }
+          })
           this.resetForm(formName)
         } else {
           console.log('error submit!!')
