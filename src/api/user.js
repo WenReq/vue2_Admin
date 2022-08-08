@@ -15,3 +15,7 @@ export function userinfo(data={}) {
 export function updateUserInfo(data, config) {
   return httpPost('/my/updateUserInfo', data, config)
 }
+
+export function updatePwd(data, config) {
+  return httpPost('/my/updatePwd', data, config)
+}

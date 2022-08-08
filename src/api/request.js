@@ -11,6 +11,11 @@ export function httpGet(url, params) {
       resolve(res.data)
     }).catch(err => {
       console.warn(err, 'WARN')
+      Message.error({
+        type: 'error',
+        message: err,
+        duration: 2000,
+      })
       reject(err)
     })
   })

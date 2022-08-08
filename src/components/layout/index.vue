@@ -105,11 +105,30 @@
 </template>
 
 <script>
-import { userinfo, updateUserInfo } from '@/api/user'
+import { userinfo, updateUserInfo, updatePwd } from '@/api/user'
 import Aside from './aside.vue'
 export default {
   name: 'layout',
   data () {
+    var validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入新密码'));
+      } else {
+        if (this.ruleForm.checkPass !== '') {
+          this.$refs.ruleForm.validateField('checkPass');
+        }
+        callback();
+      }
+    };
+    var validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (value !== this.ruleForm.newPass) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
     return {
       nickname: '',
       isCollapse: false,
@@ -132,13 +151,13 @@ export default {
       },
       rules: {
         oldPass: [
-          { required: true, message: '原密码不能为空', trigger: 'blur' },
+          { message: '原密码不能为空', trigger: 'blur', required: true },
         ],
         newPass: [
-          { required: true, message: '新密码不能为空', trigger: 'blur' },
+          { validator: validatePass, trigger: 'blur', required: true },
         ],
         checkPass: [
-          { required: true, message: '再次确认密码不能为空', trigger: 'blur' },
+          { validator: validatePass2, trigger: 'blur', required: true },
         ],
       }
     }
@@ -217,7 +236,18 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$message.success('密码修改成功')
+          let params = new URLSearchParams()
+          params.append('oldPwd', this.ruleForm.oldPass)
+          params.append('newPwd', this.ruleForm.newPass)
+          updatePwd(params).then(res => {
+            const { status, message } = res
+            if (status === 0) {
+              this.updatePwdVisibility = false
+              this.$message.success(message)
+            } else {
+              this.$message.error(message)
+            }
+          })
           this.resetForm(formName)
         } else {
           console.log('error submit!!')
