@@ -2,12 +2,10 @@
   <div>
     <div class="header">
       <div class="header-lf flx-center">
-        <i class="el-icon-s-fold collapse-icon"></i>
-        <el-breadcrumb separator="/">
-        </el-breadcrumb>
+        <Collapse></Collapse>
+        <Breadcrumb></Breadcrumb>
       </div>
       <div class="header-ri flx-center">
-        <!-- Avatar -->
         <Avatar></Avatar>
       </div>
     </div>
@@ -16,18 +14,11 @@
 
 <script>
 import Avatar from './component/Avatar'
+import Collapse from './component/Collapse'
+import Breadcrumb from './component/Breadcrumb'
 export default {
   name: 'SysHeader',
-  components: { Avatar },
-  data() {
-    return {};
-  },
-  mounted() {
-    
-  },
-  methods: {
-
-  },
+  components: { Avatar, Collapse, Breadcrumb },
 };
 </script>
 
@@ -41,17 +32,6 @@ export default {
   padding: 0 15px;
   background-color: #fff;
   border-bottom: 1px solid #f6f6f6;
-  .header-lf {
-    .collapse-icon {
-      margin-right: 20px;
-      font-size: 22px;
-      cursor: pointer;
-    }
-    .el-breadcrumb {
-      font-size: 14px;
-      line-height: 1;
-    }
-  }
   .header-ri {
     margin: 0 30px;
   }

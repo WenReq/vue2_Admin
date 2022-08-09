@@ -36,9 +36,6 @@ const routes = [
     redirect: {
       path: '/home'
     },
-    meta: {
-      title: '主入口整体布局'
-    },
     children: [...asyncRouter]
   },
   {

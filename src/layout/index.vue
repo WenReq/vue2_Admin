@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import Aside from './aside.vue'
+import Aside from './aside/index.vue'
 import Header from './header/index.vue'
 import Tabs from './tabs.vue'
 import Footer from './footer.vue'
@@ -48,7 +48,7 @@ export default {
 }
 
 .el-aside {
-  width: auto;
+  width: auto !important;
   overflow: inherit;
   background-color: #191a20;
 }
