@@ -33,18 +33,48 @@ export default {
 
   data() {
     return {
-      tabsMenuList: []
+      
     };
   },
-  computed: {
-    tabsMenuValue () {
-      return this.$route.path
+  watch: {
+    // 监听路由的变化，防止后退前进不变化 tabsMenuValue
+    // '$route.path': function (newVal, oldVal) {
+    //   if(newVal) {
+    //     let params = {
+    //       title: this.$route.meta.title,
+    //       path: this.$route.path,
+    //       close: true
+    //     };
+    //     this.$store.commit('addTabs', params);
+    //   }
+    // } 
+    // TODO: THIS IS not-descriptors
+    '$route.path': {
+      handler: function () {
+        debugger
+        let params = {
+          title: this.$route.meta.title,
+          path: this.$route.path,
+          close: true
+        };
+        this.$store.dispatch('addTabs', params);
+      },
+      immediate: true,
     },
   },
-  mounted() {
-    
+  computed: {
+    tabsMenuValue: {
+      get: function() {
+        return this.$store.state.tabs.tabsMenuValue
+      },
+      set: function(value) {
+        this.$store.commit('setTabsMenuValue')
+      },
+    },
+    tabsMenuList() {
+      return this.$store.state.tabs.tabsMenuList
+    },
   },
-
   methods: {
     tabClick (val) {
       this.$router.push({
@@ -52,7 +82,7 @@ export default {
       })
     },
     removeTab (val) {
-      let tabsState = this.$store.state.users.tabsState
+      this.$store.commit('removeTabs', val)
     },
   },
 };

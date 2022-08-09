@@ -15,7 +15,7 @@
     <!-- 修改密码 -->
     <PasswordDialog ref="passwordRef"></PasswordDialog>
     <!-- 个人资料 -->
-    <InfoDialog ref="infoRef" :userInfoForm="userInfoForm"></InfoDialog>
+    <InfoDialog ref="infoRef" :userInfoForm="userInfoForm" @getInfo="getUserInfo"></InfoDialog>
   </div>
 </template>
 
@@ -87,6 +87,11 @@ export default {
     cursor: pointer;
     border-radius: 50%;
     display: flex;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
   }
 }
 </style>

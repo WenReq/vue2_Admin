@@ -79,12 +79,12 @@ export default {
             if (status === 0) {
               this.userInfoVisibility = false
               this.$message.success(message)
-              this.getUserInfo()
+              this.$emit('getInfo')
             } else {
               this.$message.error(message)
             }
           })
-          this.resetForm(formName)
+          this.resetUserForm(formName)
         } else {
           console.log('error submit!!')
           return false
@@ -132,7 +132,7 @@ export default {
         const { status, message } = res
         if (status === 0) {
           this.$message.success(message)
-          this.getUserInfo()
+          this.$emit('getInfo')
         } else {
           this.$message.error(message)
         }
@@ -143,5 +143,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.el-upload {
+  width: 100px;
+  height: 100px;
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+}
 </style>

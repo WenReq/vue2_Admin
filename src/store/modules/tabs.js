@@ -4,7 +4,7 @@ import router from '@/router/index';
 export const tabs = {
   state: {
     tabsMenuValue: HOME_URL,
-    tabsMenuList: [{ title: "首页", path: HOME_URL, icon: "home-filled", close: false }]
+    tabsMenuList: [{ title: "首页", path: HOME_URL, icon: "el-icon-s-home", close: false }]
   },
   mutations: {
     // 设置选中 tabs 中的值
@@ -19,6 +19,7 @@ export const tabs = {
   actions: {
     // 添加 tabs
     addTabs ({ commit, state }, tabItem) {
+      debugger
       // 不添加 tabs 黑名单
       if (TABS_BLACK_LIST.includes(tabItem.path)) return;
       const tabInfo = {

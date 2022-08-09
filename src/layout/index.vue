@@ -11,7 +11,14 @@
         </el-header>
         <el-main>
           <section class="main-box">
-            <router-view></router-view>
+            <!-- <router-view></router-view> -->
+            <router-view v-slot="{ Component, route }">
+						<transition appear name="fade-transform" mode="out-in">
+							<keep-alive>
+								<component :is="Component" :key="route.path"></component>
+							</keep-alive>
+						</transition>
+					</router-view>
           </section>
         </el-main>
         <el-footer>
@@ -30,6 +37,11 @@ import Footer from './footer.vue'
 export default {
   name: 'layout',
   components: { Aside, Header, Tabs, Footer },
+  data() {
+    return {
+      
+    }
+  },
 }
 </script>
 
@@ -68,6 +80,20 @@ export default {
     background-color: #fff;
     border-radius: 4px;
     box-shadow: 0 2px 12px #0000001a;
+    .fade-transform-leave-active,
+    .fade-transform-enter-active {
+      transition: all 0.2s;
+    }
+    .fade-transform-enter-from {
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: all 0.2s;
+    }
+    .fade-transform-leave-to {
+      opacity: 0;
+      transform: translateX(30px);
+      transition: all 0.2s;
+    }
   }
 }
 

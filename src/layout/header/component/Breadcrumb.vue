@@ -34,4 +34,17 @@ export default {
   font-size: 14px;
   line-height: 1;
 }
+.breadcrumb-enter-active,
+.breadcrumb-leave-active {
+	transition: all 0.2s ease;
+}
+.breadcrumb-enter-from,
+.breadcrumb-leave-active {
+	opacity: 0;
+	transform: translateX(10px);
+}
+.breadcrumb-leave-active {
+	position: absolute;
+	z-index: -1;
+}
 </style>
