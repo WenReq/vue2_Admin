@@ -1,8 +1,10 @@
 // 我们组装模块并导出 store 的地方
 import Vue from 'vue'
 import Vuex from 'vuex'
-import users from './modules/users'
-import tabs from './modules/tabs'
+import { users } from './modules/users'
+import { tabs } from './modules/tabs'
+import { menus } from './modules/menus'
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex)
 
@@ -14,7 +16,15 @@ export default new Vuex.Store({
   modules: {
     users,
     tabs,
-  }
+    menus,
+  },
+  
+  /* vuex 数据持久化配置 */
+  plugins: [
+    createPersistedState({
+      storage: window.localStorage,
+    })
+  ],
 })
 
 /**

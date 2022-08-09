@@ -10,7 +10,7 @@ const whiteList = ['login', 'homePage']
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  const token = localStorage.getItem('ACCESS_TOKEN')
+  const token = localStorage.getItem('vuex') && JSON.parse(localStorage.getItem('vuex')).users.accessToken
   if (token) {
     if (to.path === '/login') {
       next()

@@ -1,8 +1,8 @@
 /*
  * @Description: 项目配置项
- * @Author: voanit
+ * @Author: wenshaochang
  * @Date: 2022-06-13 21:40:47
- * @LastEditors: voanit
+ * @LastEditors: wenshaochang
  * @LastEditTime: 2022-06-14 22:23:21
  */
 const {

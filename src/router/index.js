@@ -1,14 +1,14 @@
 /*
  * @Descripttion:
- * @Author: voanit
+ * @Author: wenshaochang
  * @Date: 2022-06-16 19:43:07
- * @LastEditors: voanit
+ * @LastEditors: wenshaochang
  * @LastEditTime: 2022-06-20 19:49:29
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // import HomeView from "../views/HomeView.vue";
-import main from '@/components/layout/index.vue'
+import main from '@/layout/index.vue'
 import asyncRouter from './asyncRouter'
 
 const originalPush = VueRouter.prototype.push

@@ -1,8 +1,8 @@
 <!--
- * @Descripttion: 
- * @Author: voanit
+ * @Descripttion: 首页
+ * @Author: wenshaochang
  * @Date: 2022-06-16 19:43:07
- * @LastEditors: voanit
+ * @LastEditors: wenshaochang
  * @LastEditTime: 2022-06-18 16:28:29
 -->
 <template>
@@ -24,8 +24,9 @@ export default {
   align-items: center;
   width: 100%;
   height: 100%;
+  overflow: hidden;
   img {
-    width: 80%;
+    width: 100%;
     margin-bottom: 25px;
   }
 }

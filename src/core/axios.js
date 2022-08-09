@@ -18,7 +18,7 @@ const _axios = axios.create(config)
 
 _axios.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('ACCESS_TOKEN')
+    const token = localStorage.getItem('vuex') && JSON.parse(localStorage.getItem('vuex')).users.accessToken
     if (token) {
       config.headers['authorization'] = token
     }

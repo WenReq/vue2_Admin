@@ -244,7 +244,7 @@ export default {
             // 登陆
             param.append('username', this.ruleForm.username)
             param.append('password', this.ruleForm.password)
-            this.$store.dispatch('users/getToken', param).then((res) => {
+            this.$store.dispatch('getToken', param).then((res) => {
               if (res.status === 0) {
                 this.$message.success(res.message)
                 this.$router.push({

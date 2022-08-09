@@ -6,7 +6,7 @@
     </div>
     <div class="scollbar">
       <el-menu
-        :default-active="calcDefault(tabsMenuValue)"
+        :default-active="tabsMenuValue"
         class="el-menu-vertical-demo"
         :collapse="isCollapse"
         text-color="#bdbdc0"
@@ -59,11 +59,11 @@ export default {
       return this.$store.state.users.selectMenu
     },
     tabsMenuValue () {
-      return this.$store.state.users.tabsState.tabsMenuValue
+      return this.$route.path
     },
   },
   created: function () {
-    this.load()
+    // this.load()
   },
   methods: {
     load () {
@@ -74,17 +74,6 @@ export default {
     },
     // 选中菜单处理
     handleSelect (key, keyPath) {
-      // 选择的菜单是多级嵌套还是单级的形式
-      const single = keyPath.length === 1 && this.flatMenus.find(it => it.index === keyPath.join())
-      const path = keyPath.length > 1 ? this.handleMoreItem(keyPath) : single.path
-      // 将选中的菜单项存储起来，用于面包屑的展示和刷新后的重新选中。
-      const selectMenu = this.handleSelectMenu(keyPath)
-      localStorage.setItem('SELECT_MENU', JSON.stringify(selectMenu))
-      this.$store.commit('users/setSelectMenu', selectMenu)
-      // TODO: 临时解决 vuex 数据不是响应式的问题
-      this.$emit('selectMenuItem', selectMenu)
-      // 将不是首页菜单的 tabs 进行存储，用于应用级的 tbs，且支持可关闭
-      if (key !== '1') { this.handleTabMenus(selectMenu) }
       // 跳转对应的路由
       this.$router.push({
         path
@@ -163,11 +152,6 @@ export default {
       localStorage.setItem('TABS_STATE', JSON.stringify(tabsState))
       this.$store.commit('users/setTabsState', tabsState)
     },
-    // 计算选中菜单的值
-    calcDefault (val) {
-      const match = this.flatMenus.find(it => it.path === val)
-      return match.index
-    }
   },
 }
 </script>
