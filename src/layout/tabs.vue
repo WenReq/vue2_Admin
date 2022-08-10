@@ -6,7 +6,7 @@
           v-model="tabsMenuValue"
           type="card"
           @tab-click="tabClick"
-          @tab-remove="removeTab"
+          @tab-remove="removeTabs"
         >
           <el-tab-pane
             v-for="item in tabsMenuList"
@@ -22,6 +22,7 @@
             </template>
           </el-tab-pane>
         </el-tabs>
+        <!-- <MoreButton></MoreButton> -->
       </div>
     </div>
   </div>
@@ -69,7 +70,7 @@ export default {
         path: val.name
       })
     },
-    removeTab (val) {
+    removeTabs (val) {
       this.$store.dispatch('removeTabs', val)
     },
   },

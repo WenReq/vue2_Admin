@@ -40,13 +40,13 @@ export const tabs = {
       router.push(tabInfo.path)
     },
     // 移除 tabs
-    removeTabs ({ commit, state }, toPath) {
+    removeTabs ({ commit, state }, tabPath) {
       let tabsMenuValue = state.tabsMenuValue
       const tabsMenuList = state.tabsMenuList
       // 关闭当前选中的 tab；tab 选中的值变更为下一个list当前的 tab，或上一个。
-      if (toPath === tabsMenuValue) {
+      if (tabPath === tabsMenuValue) {
         tabsMenuList.forEach((item, index) => {
-          if (item.path !== toPath) return
+          if (item.path !== tabPath) return
           const nextTab = tabsMenuList[index + 1] || tabsMenuList[index - 1]
           if (!nextTab) return
           tabsMenuValue = nextTab.path
@@ -55,7 +55,7 @@ export const tabs = {
       }
       // 将处理后的值再次赋值
       commit('setTabsMenuValue', tabsMenuValue)
-      commit('setTabsMenuList', tabsMenuList)
+      commit('setTabsMenuList', tabsMenuList.filter(item => item.path !== tabPath))
     }
   }
 }
