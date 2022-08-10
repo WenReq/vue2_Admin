@@ -31,7 +31,7 @@
 <script>
 import Aside from './aside/index.vue'
 import Header from './header/index.vue'
-import Tabs from './tabs.vue'
+import Tabs from './tabs/index.vue'
 import Footer from './footer.vue'
 export default {
   name: 'layout',

@@ -22,16 +22,17 @@
             </template>
           </el-tab-pane>
         </el-tabs>
-        <!-- <MoreButton></MoreButton> -->
+        <MoreButton></MoreButton>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import MoreButton from './components/MoreButton.vue'
 export default {
   name: 'SysTabs',
-
+  components: {MoreButton},
   data() {
     return {
       
@@ -82,6 +83,8 @@ export default {
   .tabs-menu {
     position: relative;
     width: 100%;
+    display: flex;
+    align-items: center;
     ::v-deep .el-tabs {
       .el-tabs__header {
         box-sizing: border-box;
@@ -100,6 +103,10 @@ export default {
           border: none;
         }
       }
+    }
+    .el-dropdown {
+      margin-left: auto;
+      margin-right: 10px;
     }
   }
 }

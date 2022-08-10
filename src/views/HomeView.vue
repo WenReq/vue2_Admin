@@ -26,8 +26,7 @@ export default {
   height: 100%;
   overflow: hidden;
   img {
-    width: 100%;
-    margin-bottom: 25px;
+    width: 90%;
   }
 }
 </style>

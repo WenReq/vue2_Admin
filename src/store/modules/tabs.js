@@ -7,21 +7,21 @@ export const tabs = {
     tabsMenuList: [{ title: "首页", path: HOME_URL, icon: "el-icon-s-home", close: false }]
   },
   mutations: {
-    // 设置选中 tabs 中的值
+    // 设置选中的 tab
     setTabsMenuValue (state, val) {
       state.tabsMenuValue = val
     },
-    // 给 tabsList 添加一项
+    // 添加一个 tab
     addTabsMenuList (state, val) {
       state.tabsMenuList.push(val)
     },
-    // 设置 tabsMenuList
+    // 设置 tabs 集合
     setTabsMenuList (state, val) {
       state.tabsMenuList = val
     },
   },
   actions: {
-    // 添加 tabs
+    // 添加一个 tab
     addTabs ({ commit, state }, tabItem) {
       // 不添加 tabs 黑名单
       if (TABS_BLACK_LIST.includes(tabItem.path)) return
@@ -39,7 +39,7 @@ export const tabs = {
       // 路由跳转到新添加的菜单路由
       router.push(tabInfo.path)
     },
-    // 移除 tabs
+    // 移除一个 tab
     removeTabs ({ commit, state }, tabPath) {
       let tabsMenuValue = state.tabsMenuValue
       const tabsMenuList = state.tabsMenuList
@@ -56,6 +56,17 @@ export const tabs = {
       // 将处理后的值再次赋值
       commit('setTabsMenuValue', tabsMenuValue)
       commit('setTabsMenuList', tabsMenuList.filter(item => item.path !== tabPath))
-    }
+    },
+    // 移除多个 tab
+    closeMultipleTabs ({ commit, state }, tabPath) {
+      commit('setTabsMenuList', state.tabsMenuList.filter(item => {
+        return item.path === tabPath || item.path === HOME_URL
+      }))
+    },
+    // 跳转首页
+    goHome ({ commit }) {
+      router.push(HOME_URL)
+      commit('setTabsMenuValue', HOME_URL)
+    },
   }
 }
