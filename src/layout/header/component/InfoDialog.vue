@@ -103,7 +103,6 @@ export default {
         this.$message.error('上传头像图片大小不能超过 2MB!');
       }
       if(isJPG && isLt2M){
-        debugger
         vm.getBase64(file.raw).then(res => {
           vm.handleSetAvatar({ avatar:res })
         })

@@ -11,14 +11,13 @@
         </el-header>
         <el-main>
           <section class="main-box">
-            <!-- <router-view></router-view> -->
             <router-view v-slot="{ Component, route }">
-						<transition appear name="fade-transform" mode="out-in">
-							<keep-alive>
-								<component :is="Component" :key="route.path"></component>
-							</keep-alive>
-						</transition>
-					</router-view>
+              <transition appear name="fade-transform" mode="out-in">
+                <keep-alive>
+                  <component :is="Component" :key="route.path"></component>
+                </keep-alive>
+              </transition>
+            </router-view>
           </section>
         </el-main>
         <el-footer>

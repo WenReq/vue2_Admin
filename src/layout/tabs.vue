@@ -38,20 +38,8 @@ export default {
   },
   watch: {
     // 监听路由的变化，防止后退前进不变化 tabsMenuValue
-    // '$route.path': function (newVal, oldVal) {
-    //   if(newVal) {
-    //     let params = {
-    //       title: this.$route.meta.title,
-    //       path: this.$route.path,
-    //       close: true
-    //     };
-    //     this.$store.commit('addTabs', params);
-    //   }
-    // } 
-    // TODO: THIS IS not-descriptors
     '$route.path': {
       handler: function () {
-        debugger
         let params = {
           title: this.$route.meta.title,
           path: this.$route.path,
@@ -82,7 +70,7 @@ export default {
       })
     },
     removeTab (val) {
-      this.$store.commit('removeTabs', val)
+      this.$store.dispatch('removeTabs', val)
     },
   },
 };

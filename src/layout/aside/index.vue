@@ -16,19 +16,33 @@
 				text-color="#bdbdc0"
 				active-text-color="#fff"
       >
-        <SubItem :menuList="menuList"></SubItem>
+        <!-- 菜单不能正常收缩。因为子组件中添加了div标签，把ul中的li元素外添加了div -->
+        <!-- <SubItem :menuList="menuList"></SubItem> -->
+        <template v-for="(subItem, index) in menuList">
+          <el-submenu :key="subItem.path" v-if="subItem.children && subItem.children.length > 0" :index="subItem.path">
+            <template #title>
+              <i :class="subItem.meta.icon"></i>
+              <span>{{ subItem.meta.title }}</span>
+            </template>
+            <SubItem :menuList="subItem.children"></SubItem>
+          </el-submenu>
+          <el-menu-item :key="index" v-else :index="subItem.path">
+            <i :class="subItem.meta.icon"></i>
+            <span>{{ subItem.meta.title }}</span>
+          </el-menu-item>
+        </template>
       </el-menu>
     </div>
   </div>
 </template>
 
 <script>
-import SubItem from './components/SubItem'
+// import SubItem from './components/SubItem'
 import asyncRouter from '@/router/asyncRouter'
 
 export default {
   name: 'Aside',
-  components: { SubItem },
+  // components: { SubItem },
   data () {
     return {
 
