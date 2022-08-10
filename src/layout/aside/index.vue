@@ -115,9 +115,9 @@ export default {
     /deep/ .el-menu {
       border: none;
       background-color: #191a20;
-      .el-menu-item .is-active {
-        color: #409eff;
-        background-color: #060708;
+      .el-menu-item.is-active {
+        color: #409eff !important;
+        background-color: #060708 !important;
         &:before {
           position: absolute;
           top: 0;
@@ -136,6 +136,10 @@ export default {
       .el-menu-item:hover {
         outline: 0;
         background-color: #060708;
+      }
+      .el-sub-menu .el-menu-item {
+        height: 50px;
+        line-height: 50px;
       }
     }
   }

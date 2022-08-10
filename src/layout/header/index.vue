@@ -32,9 +32,6 @@ export default {
   padding: 0 15px;
   background-color: #fff;
   border-bottom: 1px solid #f6f6f6;
-  .header-ri {
-    margin: 0 30px;
-  }
   .flx-center {
     display: flex;
     align-items: center;
