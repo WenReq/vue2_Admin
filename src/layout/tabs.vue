@@ -38,11 +38,11 @@ export default {
   },
   watch: {
     // 监听路由的变化，防止后退前进不变化 tabsMenuValue
-    '$route.path': {
-      handler: function () {
+    '$route': {
+      handler: function (value) {
         let params = {
-          title: this.$route.meta.title,
-          path: this.$route.path,
+          title: value.meta.title,
+          path: value.path,
           close: true
         };
         this.$store.dispatch('addTabs', params);
@@ -56,7 +56,7 @@ export default {
         return this.$store.state.tabs.tabsMenuValue
       },
       set: function(value) {
-        this.$store.commit('setTabsMenuValue')
+        this.$store.commit('setTabsMenuValue', value)
       },
     },
     tabsMenuList() {

@@ -25,9 +25,6 @@ export default {
       default: () => [],
     }
   },
-  mounted() {
-    console.log(this.menuList)
-  }
 };
 </script>
 

@@ -37,7 +37,7 @@ export const tabs = {
       // 设置新添加的菜单项为选中的 tab
       commit('setTabsMenuValue', tabInfo.path)
       // 路由跳转到新添加的菜单路由
-      // router.push(tabInfo.path)
+      router.push(tabInfo.path)
     },
     // 移除 tabs
     removeTabs ({ commit, state }, toPath) {

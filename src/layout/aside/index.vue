@@ -6,7 +6,7 @@
     </div>
     <div class="scoll-bar">
       <el-menu
-        :default-active="tabsMenuValue"
+        :default-active="activeMenu"
         class="el-menu-vertical-demo"
         :collapse="isCollapse"
         :router="true"
@@ -37,12 +37,12 @@
 </template>
 
 <script>
-// import SubItem from './components/SubItem'
+import SubItem from './components/SubItem'
 import asyncRouter from '@/router/asyncRouter'
 
 export default {
   name: 'Aside',
-  // components: { SubItem },
+  components: { SubItem },
   data () {
     return {
 
@@ -52,7 +52,7 @@ export default {
     isCollapse () {
       return this.$store.state.menus.isCollapse
     },
-    tabsMenuValue () {
+    activeMenu () {
       return this.$route.path
     },
     menuList () {
