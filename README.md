@@ -30,4 +30,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## 系统菜单、tabs 用 store 的设计
 
-![flow](./public/flow.png)
+![flow](./public/flow1.png)
