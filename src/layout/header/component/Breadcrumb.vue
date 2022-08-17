@@ -2,7 +2,7 @@
   <div>
     <el-breadcrumb separator="/">
       <transition-group name="breadcrumb" mode="out-in">
-        <el-breadcrumb-item :to="{ path: HOME_URL }" key="/home1">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: HOME_URL }" key="/home">首页</el-breadcrumb-item>
         <el-breadcrumb-item v-for="item in matched" :key="item.path" :to="{ path: item.path }">
           {{ item.meta.title }}
         </el-breadcrumb-item>

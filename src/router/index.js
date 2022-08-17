@@ -30,14 +30,7 @@ const routes = [
     name: 'login',
     component: () => import('@/views/login/index.vue')
   },
-  {
-    path: '/',
-    component: main,
-    redirect: {
-      path: '/home'
-    },
-    children: [...asyncRouter]
-  },
+  ...asyncRouter,
   {
     path: '/error',
     name: 'error',

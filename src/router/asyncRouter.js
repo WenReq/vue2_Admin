@@ -5,16 +5,28 @@ import HomeView from '@/views/HomeView.vue'
 export default [
   {
     path: '/home',
-    name: 'home',
     meta: {
       title: '首页',
       icon: 'el-icon-s-home'
     },
-    component: () => import(/* webpackChunkName: "home" */ '@/views/HomeView.vue')
+    redirect: '/home/index',
+    component: () => import('@/layout/index.vue'),
+    // 
+    children: [
+      {
+        path: '/home/index',
+        name: 'home',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/HomeView.vue'),
+        meta: {
+          title: '首页',
+          icon: 'el-icon-s-home'
+        },
+      }
+    ]
   },
   {
     path: '/bigEvents',
-    component: main,
+    component: () => import('@/layout/index.vue'),
     redirect: '/bigEvents/cates',
     meta: {
       title: '大事件-文章管理',
@@ -53,14 +65,12 @@ export default [
   {
     path: '/component',
     name: 'Component',
-    redirect: {
-      name: 'Table'
-    },
+    redirect: '/component/table',
     meta: {
       title: '公用组件',
       icon: 'el-icon-setting'
     },
-    component: () => import('@/views/component/table/list.vue'),
+    component: () => import('@/layout/index.vue'),
     children: [
       {
         path: '', // 如果你想要渲染点什么，可以提供一个 空的 子路由
