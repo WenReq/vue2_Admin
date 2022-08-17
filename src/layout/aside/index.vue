@@ -21,14 +21,14 @@
         <template v-for="(subItem, index) in menuList">
           <el-submenu :key="subItem.path" v-if="subItem.children && subItem.children.length > 0" :index="subItem.path">
             <template #title>
-              <i :class="subItem.meta.icon"></i>
-              <span>{{ subItem.meta.title }}</span>
+              <i class="iconfont" :class="subItem.meta.icon"></i>
+              <span class="menu-name">{{ subItem.meta.title }}</span>
             </template>
             <SubItem :menuList="subItem.children"></SubItem>
           </el-submenu>
           <el-menu-item :key="index" v-else :index="subItem.path">
-            <i :class="subItem.meta.icon"></i>
-            <span>{{ subItem.meta.title }}</span>
+            <i class="iconfont" :class="subItem.meta.icon"></i>
+            <span class="menu-name">{{ subItem.meta.title }}</span>
           </el-menu-item>
         </template>
       </el-menu>
@@ -140,6 +140,9 @@ export default {
       .el-sub-menu .el-menu-item {
         height: 50px;
         line-height: 50px;
+      }
+      .menu-name {
+        margin-left: 7px;
       }
     }
   }

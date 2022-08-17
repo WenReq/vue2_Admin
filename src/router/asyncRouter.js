@@ -1,4 +1,4 @@
-// import main from '@/components/layout/index.vue'
+import main from '@/layout/index.vue'
 // import componentRouter from '../router/componentRouter'
 import HomeView from '@/views/HomeView.vue'
 
@@ -6,13 +6,49 @@ export default [
   {
     path: '/home',
     name: 'home',
-    index: '1',
     meta: {
-      id: 1,
       title: '首页',
       icon: 'el-icon-s-home'
     },
     component: () => import(/* webpackChunkName: "home" */ '@/views/HomeView.vue')
+  },
+  {
+    path: '/bigEvents',
+    component: main,
+    redirect: '/bigEvents/cates',
+    meta: {
+      title: '大事件-文章管理',
+      icon: 'el-icon-document'
+    },
+    children: [
+      {
+        path: '/bigEvents/cates',
+        name: 'ArticleCate',
+        meta: {
+          title: '文章类别',
+          icon: 'icon-leibie'
+        },
+        component: () => import(/* webpackChunkName: "ArticleCate" */ '@/views/bigEvents/cates.vue')
+      },
+      {
+        path: '/bigEvents/articleList',
+        name: 'ArticleList',
+        meta: {
+          title: '文章列表',
+          icon: 'icon-liebiao'
+        },
+        component: () => import(/* webpackChunkName: "ArticleList" */ '@/views/bigEvents/articleList.vue')
+      },
+      {
+        path: '/bigEvents/articleAdd',
+        name: 'ArticleAdd',
+        meta: {
+          title: '发布文章',
+          icon: 'icon-bianjiwenzhang_huaban'
+        },
+        component: () => import(/* webpackChunkName: "ArticleAdd" */ '@/views/bigEvents/articleAdd.vue')
+      }
+    ]
   },
   {
     path: '/component',
@@ -20,9 +56,7 @@ export default [
     redirect: {
       name: 'Table'
     },
-    index: '2',
     meta: {
-      id: 2,
       title: '公用组件',
       icon: 'el-icon-setting'
     },
@@ -31,9 +65,7 @@ export default [
       {
         path: '', // 如果你想要渲染点什么，可以提供一个 空的 子路由
         component: HomeView,
-        index: '2-0',
         meta: {
-          parentId: 2,
           title: '空跳转',
           icon: 'el-icon-s-order'
         }
@@ -43,9 +75,7 @@ export default [
         // path: '/table',
         path: '/component/table',
         name: 'Table',
-        index: '2-1',
         meta: {
-          parentId: 2,
           title: 'Table组件',
           icon: 'el-icon-s-order'
         },

@@ -148,7 +148,7 @@
 <script>
 import { reguser, login } from '@/api/user'
 export default {
-  name: 'index',
+  name: 'login',
   data () {
     var validatePassword = (rule, value, callback) => {
       if (!value) {
