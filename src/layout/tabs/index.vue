@@ -85,7 +85,7 @@ export default {
     width: 100%;
     display: flex;
     align-items: center;
-    ::v-deep .el-tabs {
+    :deep(.el-tabs) {
       .el-tabs__header {
         box-sizing: border-box;
         height: 40px;

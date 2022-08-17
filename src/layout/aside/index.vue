@@ -112,7 +112,7 @@ export default {
     justify-content: center;
   }
   .scoll-bar {
-    /deep/ .el-menu {
+    :deep(.el-menu) {
       border: none;
       background-color: #191a20;
       .el-menu-item.is-active {
