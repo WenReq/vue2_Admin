@@ -31,3 +31,5 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ## 系统菜单、tabs 用 store 的设计
 
 ![flow](./public/flow1.png)
+
+[掘金文章](https://juejin.cn/post/7132304086937894920)
