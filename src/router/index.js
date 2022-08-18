@@ -8,7 +8,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // import HomeView from "../views/HomeView.vue";
-import main from '@/layout/index.vue'
 import asyncRouter from './asyncRouter'
 
 const originalPush = VueRouter.prototype.push

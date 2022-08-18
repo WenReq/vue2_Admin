@@ -1,4 +1,3 @@
-import main from '@/layout/index.vue'
 // import componentRouter from '../router/componentRouter'
 import HomeView from '@/views/HomeView.vue'
 
@@ -6,19 +5,16 @@ export default [
   {
     path: '/home',
     meta: {
-      title: '首页',
       icon: 'el-icon-s-home'
     },
     redirect: '/home/index',
     component: () => import('@/layout/index.vue'),
-    // 
     children: [
       {
         path: '/home/index',
         name: 'home',
         component: () => import(/* webpackChunkName: "home" */ '@/views/HomeView.vue'),
         meta: {
-          title: '首页',
           icon: 'el-icon-s-home'
         },
       }
