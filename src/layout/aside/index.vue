@@ -75,8 +75,28 @@ export default {
     handleSetMenuList() {
       // 如果是动态获取的路由，需要调接口后设置。this.$store.commit('setMenuList', res.data);
       // 目前本项目是静态的路由
-      this.$store.commit('setMenuList', asyncRouter);
+      // 处理路由结构用于系统的左侧菜单
+      const filterData = this.handleFilterData(asyncRouter);
+      this.$store.commit('setMenuList', filterData);
     },
+    /**
+     * 描述：处理系统左侧菜单的数据结构
+     * @date 2022-08-18
+     * @param {Array} list 本地静态路由集合
+     * @returns {Array} 返回处理后的菜单数据结构
+     */
+    handleFilterData (list) {
+      list.shift()
+      const homeConfig = {
+        path: '/home/index',
+        meta: {
+          title: '首页',
+          icon: 'el-icon-s-home'
+        },
+      }
+      list.unshift(homeConfig)
+      return list
+    }
   },
 }
 </script>
