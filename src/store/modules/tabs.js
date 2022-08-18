@@ -31,7 +31,7 @@ export const tabs = {
         close: tabItem.close,
       };
       // 如果打开的 tabs list 中没有这个 item，则添加到 list 中。（用 path 判断）
-      if (state.tabsMenuList.every(item => item.path !== tabInfo.path)) {
+      if (state.tabsMenuList.every(item => item.path !== tabInfo.path) && tabInfo.path !== '/home/index') {
         commit('addTabsMenuList', tabInfo)
       }
       // 设置新添加的菜单项为选中的 tab
