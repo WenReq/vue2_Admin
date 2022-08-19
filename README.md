@@ -28,6 +28,12 @@ pnpm lint
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
+## branch
+
+- master 主分支：开发一些常用的组件和其他所学的东西。
+
+- starter 开发模版分支：一个基础架构的管理系统的模版，开箱即用。
+
 ## 系统菜单、tabs 用 store 的设计
 
 ![flow](./public/flow.png)
