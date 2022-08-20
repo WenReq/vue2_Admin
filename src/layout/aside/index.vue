@@ -130,6 +130,8 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 55px;
+    line-height: 55px;
   }
   .scoll-bar {
     :deep(.el-menu) {
