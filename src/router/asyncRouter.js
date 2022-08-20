@@ -86,6 +86,15 @@ export default [
           icon: 'el-icon-s-order'
         },
         component: () => import(/* webpackChunkName: "Table" */ '@/views/component/table/list.vue')
+      },
+      {
+        path: '/components/export',
+        name: 'Export',
+        meta: {
+          title: '导出功能',
+          icon: 'icon-export1',
+        },
+        component: () => import(/* webpackChunkName: "Export" */ '@/views/component/export/pdf.vue')
       }
     ]
   }
