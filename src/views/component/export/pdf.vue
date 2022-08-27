@@ -1,6 +1,6 @@
 <template>
     <div id="pdfPage">
-        <el-button type="primary" @click="handleExport">导出pdf</el-button>
+        <el-button size="mini" type="primary" @click="handleExport">导出pdf</el-button>
         <div id="pdfDom" style="background-color: white">
             <img src="@/assets/logo.png" alt="" srcset="">
             <p v-for="(item, index) in 150" :key="index">
