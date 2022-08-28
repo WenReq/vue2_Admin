@@ -4,30 +4,32 @@
       <div class="mr10"></div>
       <div class="title-left">文章类别管理</div>
       <div class="title-right">
-        <el-button @click="handleOpreate()" type="primary" size="small">添加类别</el-button>
+        <el-button @click="handleOpreate()" type="primary" size="small"
+          >添加类别</el-button
+        >
       </div>
     </div>
     <div class="content">
       <div class="content-table">
-        <el-table
-          :data="tableData"
-          border
-          style="width: 100%">
-          <el-table-column
-            prop="name"
-            label="分类名称">
-          </el-table-column>
-          <el-table-column
-            prop="alias"
-            label="分类别名">
-          </el-table-column>
-          <el-table-column
-            fixed="right"
-            label="操作"
-            width="150">
+        <el-table :data="tableData" border style="width: 100%">
+          <el-table-column prop="name" label="分类名称"> </el-table-column>
+          <el-table-column prop="alias" label="分类别名"> </el-table-column>
+          <el-table-column fixed="right" label="操作" width="150">
             <template slot-scope="scope">
-              <el-button @click="handleOpreate(scope.row.Id, scope.row)" type="primary" size="mini">编 辑</el-button>
-              <el-button @click="handleDelete(scope.row.Id)" type="danger" size="mini">删 除</el-button>
+              <el-button
+                @click="handleOpreate(scope.row.Id, scope.row)"
+                type="text"
+                size="small"
+                icon="el-icon-edit"
+                >编辑</el-button
+              >
+              <el-button
+                @click="handleDelete(scope.row)"
+                type="text"
+                size="small"
+                icon="el-icon-delete"
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -38,66 +40,139 @@
       :title="`${opreateTile}文章分类`"
       :visible.sync="visibility"
       width="30%"
-      :before-close="handleClose">
-      <span>这是一段信息</span>
+    >
+      <el-form
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="100px"
+      >
+        <el-form-item label="分类名称" prop="name">
+          <el-input
+            v-model="ruleForm.name"
+            clearable
+            placeholder="请输入分类名称"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="分类别名" prop="alias">
+          <el-input
+            v-model="ruleForm.alias"
+            clearable
+            placeholder="请输入分类别名"
+          ></el-input>
+        </el-form-item>
+      </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="visibility = false">取 消</el-button>
-        <el-button type="primary" @click="visibility = false">确 定</el-button>
+        <el-button type="primary" @click="handleSubmit">确 定</el-button>
       </span>
     </el-dialog>
 
     <!-- 删除提醒 -->
+    <deleteDialog
+      ref="deleteDialog"
+      :title="'温馨提示'"
+      :type="'error'"
+      :content="`是否删除【${deleteName}】类别?`"
+      @confirm="handleConfirm"
+    />
   </div>
 </template>
 
 <script>
-
-import { cates, addCates, deletecate } from '@/api/cates'
+import { cates, addCates, updatecate, deletecate } from '@/api/cates';
+import deleteDialog from '@/views/component/deleteDialog';
 
 export default {
   name: 'ArticleCate',
-
+  components: { deleteDialog },
   data() {
     return {
+      deleteId: '',
+      deleteName: '',
       visibility: false,
       editObj: {},
+      ruleForm: {
+        name: '',
+        alias: '',
+      },
+      rules: {
+        name: [{ required: true, message: '请输入分类名称', trigger: 'blur' }],
+        alias: [{ required: true, message: '请输入分类别名', trigger: 'blur' }],
+      },
       tableData: [],
     };
   },
   // 计算属性
   computed: {
     opreateTile() {
-      return Object.keys(this.editObj).length === 0 ? '新增' : '编辑'
-    }
+      return Object.keys(this.editObj).length === 0 ? '新增' : '编辑';
+    },
   },
   // 声明周期钩子 created
-  created: function() {
+  created: function () {
     this.init();
   },
   // 声明周期钩子 mounted
-  mounted() {
-    
-  },
+  mounted() {},
   // 方法
   methods: {
     init() {
       this.getData();
     },
     getData() {
-      cates().then(res => {
+      cates().then((res) => {
         const { status, data, message } = res;
-        if(status === 0) {
-          this.tableData = data;
-        } else {
-          this.$message.error(message);
-        }
-      })
+        this.tableData = data || [];
+        status !== 0 && this.$message.error(message);
+      });
     },
     // 新增和编辑操作
-    handleOpreate(id, row={}) {
+    handleOpreate(id, row = {}) {
       // 编辑当前行对象
       this.editObj = id ? row : {};
+      if (id) this.ruleForm = row || {};
       this.visibility = true;
+      this.$nextTick(() => {
+        if (id === undefined) {
+          this.ruleForm = {};
+          this.$refs.ruleForm.resetFields();
+        }
+      });
+    },
+    // 新增和编辑保存操作
+    handleSubmit() {
+      const flag = Object.keys(this.editObj).length === 0 ? 'add' : 'edit';
+      const fn = flag === 'add' ? addCates : updatecate;
+      const { name, alias } = this.ruleForm;
+      const id = this.editObj.Id || '';
+      let param = new URLSearchParams();
+      param.append('name', name);
+      param.append('alias', alias);
+      if (flag === 'edit') param.append('Id', id);
+      fn(param).then((res) => {
+        const { status, message } = res;
+        const msgType = status === 0 ? 'success' : 'error';
+        this.$message[msgType](message);
+        this.visibility = status === 0 ? false : true;
+        status === 0 && this.getData();
+      });
+    },
+    // 删除操数据的操作
+    handleDelete(row) {
+      this.deleteName = row.name;
+      this.deleteId = row.Id;
+      this.$refs.deleteDialog.dialogVisible = true;
+    },
+    // 确定删除操作
+    handleConfirm() {
+      deletecate({ Id: this.deleteId }).then((res) => {
+        const { status, message } = res;
+        const msgType = status === 0 ? 'success' : 'error';
+        this.$refs.deleteDialog.dialogVisible = false;
+        this.$message[msgType](message);
+        this.getData();
+      });
     },
   },
 };
@@ -118,14 +193,14 @@ export default {
 @property: color; // Properties 属性
 @mt: margin-top; // Properties 属性
 
-
 // 命名空间和访问符
-#bundle() {}
+#bundle() {
+}
 
 // 映射（Maps）
 #colors() {
   primary: #0079fe;
-  gradBc: #80a9fe;
+  gradbc: #80a9fe;
   white: #fff;
 }
 
@@ -137,8 +212,12 @@ export default {
 }
 // 变量插值 - 应用
 .@{my-selector} {
-  background-image: linear-gradient(260deg, #57a9ff 0%, #2c70fd 100%) !important;
-  border-color: #colors[gradBc];
+  background-image: linear-gradient(
+    260deg,
+    #57a9ff 0%,
+    #2c70fd 100%
+  ) !important;
+  border-color: #colors[gradbc];
   @{property}: #colors[white];
 }
 
