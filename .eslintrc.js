@@ -1,50 +1,43 @@
-module.exports = {
-  // 表示当前目录即为根目录，ESLint规则被下载到该目录下。
-  root: true,
-  // 解析器
-  'parserOptions': {
-    'parser': '@babel/eslint-parser'
-  },
-  // parserOptions: {
-  //   parser: 'babel-eslint',
-  //   sourceType: 'module'
-  // },
-  // 在 浏览器、node、es6 环境下启动 ESLint 检测
-  env: {
-    browser: true,
-    node: true,
-    es6: true
-  },
-  // ESLint 中基础配置需要继承的配置
-  extends: ['plugin:vue/recommended', 'eslint:recommended'],
+// "off" or 0 - 关闭这个规则校验
+// "warn" or 1 - 开启这个规则校验，但只是提醒，不会退出
+// "error" or 2 - 开启这个规则校验，并退出
 
-  // add your custom rules here
-  // it is base on https://github.com/vuejs/eslint-config-vue
-  // 需要修改的启用规则及其各自的错误级别
-  /**
-   * 错误级别分为三种：
-   * "off" 或 0 - 关闭规则
-   * "warn" 或 1  - 开启规则，使用警告级别的错误：warn（不会导致程序退出）
-   * "error" 或 2 - 开启规则，使用错误级别的错误：error（当被触发的时候）
-   */
+module.exports = {
+  root: true,
+  parserOptions: {
+    ecmaVersion: 7,
+    ecmaFeatures: {
+      'jsx': true,
+      'modules': true
+    },
+    parser: 'babel-eslint'
+  },
+
+  env: {
+    es6: true,
+    node: true
+  },
+
+  extends: [
+    'eslint:recommended',
+    'plugin:vue/recommended'
+  ],
+
+  plugins: ['vue'],
+
+  globals: {
+    document: false,
+    navigator: false,
+    window: false
+  },
+
   rules: {
-    'vue/max-attributes-per-line': [2],
-    'vue/singleline-html-element-content-newline': 'off',
-    'vue/multiline-html-element-content-newline': 'off',
-    'vue/name-property-casing': ['error', 'PascalCase'],
-    'vue/no-v-html': 'off',
     'accessor-pairs': 2,
     'arrow-spacing': [2, {
       'before': true,
       'after': true
     }],
     'block-spacing': [2, 'always'],
-    'brace-style': [2, '1tbs', {
-      'allowSingleLine': true
-    }],
-    'camelcase': [0, {
-      'properties': 'always'
-    }],
     'comma-dangle': [2, 'never'],
     'comma-spacing': [2, {
       'before': false,
@@ -55,9 +48,7 @@ module.exports = {
     'curly': [2, 'multi-line'],
     'dot-location': [2, 'property'],
     'eol-last': 2,
-    'eqeqeq': ['error', 'always', {
-      'null': 'ignore'
-    }],
+    'eqeqeq': [2, 'allow-null'],
     'generator-star-spacing': [2, {
       'before': true,
       'after': true
@@ -81,12 +72,12 @@ module.exports = {
     }],
     'new-parens': 2,
     'no-array-constructor': 2,
+    'no-console': 0,
     'no-caller': 2,
-    'no-console': 'off',
     'no-class-assign': 2,
     'no-cond-assign': 2,
     'no-const-assign': 2,
-    'no-control-regex': 0,
+    'no-control-regex': 2,
     'no-delete-var': 2,
     'no-dupe-args': 2,
     'no-dupe-class-members': 2,
@@ -143,7 +134,7 @@ module.exports = {
     'no-this-before-super': 2,
     'no-throw-literal': 2,
     'no-trailing-spaces': 2,
-    'no-undef': 2,
+    'no-undef': 0,
     'no-undef-init': 2,
     'no-unexpected-multiline': 2,
     'no-unmodified-loop-condition': 2,
@@ -182,7 +173,7 @@ module.exports = {
       'after': true
     }],
     'space-before-blocks': [2, 'always'],
-    'space-before-function-paren': [2, 'never'],
+    'space-before-function-paren': [2, 'always'],
     'space-in-parens': [2, 'never'],
     'space-infix-ops': 2,
     'space-unary-ops': [2, {
@@ -203,6 +194,23 @@ module.exports = {
     'object-curly-spacing': [2, 'always', {
       objectsInObjects: false
     }],
-    'array-bracket-spacing': [2, 'never']
+    'array-bracket-spacing': [2, 'never'],
+    'vue/jsx-uses-vars': 2,
+    'vue/max-attributes-per-line': ['error', {
+      'singleline': 3,
+      'multiline': {
+        'max': 13,
+        'allowFirstLine': false
+      }
+    }],
+    'vue/html-self-closing': ['error', {
+      'html': {
+        'void': 'never',
+        'normal': 'any',
+        'component': 'any'
+      },
+      'svg': 'always',
+      'math': 'always'
+    }]
   }
 }
