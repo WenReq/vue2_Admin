@@ -37,24 +37,6 @@ export default [
           icon: 'icon-leibie'
         },
         component: () => import(/* webpackChunkName: "ArticleCate" */ '@/views/bigEvents/cates.vue')
-      },
-      {
-        path: '/bigEvents/articleList',
-        name: 'ArticleList',
-        meta: {
-          title: '文章列表',
-          icon: 'icon-liebiao'
-        },
-        component: () => import(/* webpackChunkName: "ArticleList" */ '@/views/bigEvents/articleList.vue')
-      },
-      {
-        path: '/bigEvents/articleAdd',
-        name: 'ArticleAdd',
-        meta: {
-          title: '发布文章',
-          icon: 'icon-bianjiwenzhang_huaban'
-        },
-        component: () => import(/* webpackChunkName: "ArticleAdd" */ '@/views/bigEvents/articleAdd.vue')
       }
     ]
   },
