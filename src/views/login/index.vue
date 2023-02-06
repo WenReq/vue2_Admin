@@ -1,6 +1,6 @@
 <template>
   <div class="container center">
-    <img class="surfing" src="@/assets/svg/aircraft.svg" alt="" srcset="" />
+    <!-- <img class="surfing" src="@/assets/svg/aircraft.svg" alt="" srcset="" /> -->
     <div class="login-content">
       <div class="content-left">
         <img src="@/assets/svg/login_left4.png" alt="" srcset="" />
@@ -146,136 +146,144 @@
 </template>
 
 <script>
-import { reguser, login } from '@/api/user'
+import { reguser, login } from '@/api/user';
 export default {
   name: 'login',
-  data () {
+  data() {
     var validatePassword = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入密码'))
+        callback(new Error('请输入密码'));
       } else {
-        callback()
+        callback();
       }
-    }
-    var uPattern = /^[A-Za-z0-9]+$/ // 用户名正则，用户名必须为2-12位字母/数字
-    var pPattern = /^[\S]{6,12}$/ // 密码正则
+    };
+    var uPattern = /^[A-Za-z0-9]+$/; // 用户名正则，用户名必须为2-12位字母/数字
+    var pPattern = /^[\S]{6,12}$/; // 密码正则
     var validateUserName = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入用户名'))
+        callback(new Error('请输入用户名'));
       } else if (!uPattern.test(value)) {
-        callback(new Error('请正确输入，用户名必须为/数字/字母'))
+        callback(new Error('请正确输入，用户名必须为/数字/字母'));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     var validatePass = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入密码'))
+        callback(new Error('请输入密码'));
       } else if (!pPattern.test(value)) {
-        callback(new Error('请正确输入，6到12位的密码'))
+        callback(new Error('请正确输入，6到12位的密码'));
       } else {
         if (this.registerRuleForm.checkPass !== '') {
-          this.$refs.registerRuleForm.validateField('checkPass')
+          this.$refs.registerRuleForm.validateField('checkPass');
         }
-        callback()
+        callback();
       }
-    }
+    };
     var validatePass2 = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请再次输入密码'))
+        callback(new Error('请再次输入密码'));
       } else if (value !== this.registerRuleForm.password) {
-        callback(new Error('两次输入密码不一致!'))
+        callback(new Error('两次输入密码不一致!'));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       activeName: 'login',
       loginLoading: false,
       ruleForm: {
         username: '',
-        password: ''
+        password: '',
       },
       registerRuleForm: {
         username: '',
         password: '',
-        checkPass: ''
+        checkPass: '',
       },
       rules: {
-        username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-        password: [{ validator: validatePassword, trigger: 'blur' }]
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+        ],
+        password: [{ validator: validatePassword, trigger: 'blur' }],
       },
       registerRules: {
         username: [
-          { min: 2, max: 12, message: '长度在 2 到 12 个字符', trigger: 'blur' },
-          { validator: validateUserName, trigger: 'blur' }
+          {
+            min: 2,
+            max: 12,
+            message: '长度在 2 到 12 个字符',
+            trigger: 'blur',
+          },
+          { validator: validateUserName, trigger: 'blur' },
         ],
         password: [{ validator: validatePass, trigger: 'blur' }],
-        checkPass: [{ validator: validatePass2, trigger: 'blur' }]
-      }
-    }
+        checkPass: [{ validator: validatePass2, trigger: 'blur' }],
+      },
+    };
   },
   components: {},
   watch: {},
-  mounted () { },
+  mounted() {},
   methods: {
-    submitForm (formName) {
-      this.loginLoading = true
+    submitForm(formName) {
+      this.loginLoading = true;
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let param = new URLSearchParams()
+          let param = new URLSearchParams();
           if (formName === 'registerRuleForm') {
             // 注册
-            param.append('username', this.registerRuleForm.username)
-            param.append('password', this.registerRuleForm.password)
+            param.append('username', this.registerRuleForm.username);
+            param.append('password', this.registerRuleForm.password);
             reguser(param).then((res) => {
               if (res.status === 0) {
-                this.$message.success(res.message)
-                this.activeName = 'login'
+                this.$message.success(res.message);
+                this.activeName = 'login';
                 this.$nextTick(() => {
-                  this.$refs['ruleForm'] && this.$refs['ruleForm'].resetFields()
-                  const { username, password } = this.registerRuleForm
-                  this.ruleForm.username = username
-                  this.ruleForm.password = password
-                })
+                  this.$refs['ruleForm'] &&
+                    this.$refs['ruleForm'].resetFields();
+                  const { username, password } = this.registerRuleForm;
+                  this.ruleForm.username = username;
+                  this.ruleForm.password = password;
+                });
               }
-            })
+            });
           } else if (formName === 'ruleForm') {
             // 登陆
-            param.append('username', this.ruleForm.username)
-            param.append('password', this.ruleForm.password)
+            param.append('username', this.ruleForm.username);
+            param.append('password', this.ruleForm.password);
             this.$store.dispatch('getToken', param).then((res) => {
               if (res.status === 0) {
-                this.$message.success(res.message)
+                this.$message.success(res.message);
                 this.$router.push({
-                  path: 'home'
-                })
+                  path: 'home',
+                });
               }
-            })
+            });
           }
-          this.loginLoading = false
+          this.loginLoading = false;
         } else {
-          this.loginLoading = false
-          console.log('error submit!!')
-          return false
+          this.loginLoading = false;
+          console.log('error submit!!');
+          return false;
         }
-      })
+      });
     },
-    resetForm (formName) {
-      this.$refs[formName].resetFields()
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
     },
-    handleSwitch (num) {
-      this.activeName = num === 0 ? 'login' : 'reguser'
-      const formName = num === 0 ? 'ruleForm' : 'registerRuleForm'
+    handleSwitch(num) {
+      this.activeName = num === 0 ? 'login' : 'reguser';
+      const formName = num === 0 ? 'ruleForm' : 'registerRuleForm';
       if (num === 1) {
-        this.registerRuleForm.checkPass = ''
+        this.registerRuleForm.checkPass = '';
       }
       this.$nextTick(() => {
-        this.$refs[formName].resetFields()
-      })
-    }
-  }
-}
+        this.$refs[formName].resetFields();
+      });
+    },
+  },
+};
 </script>
 
 <style scoped lang="less">
