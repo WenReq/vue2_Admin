@@ -64,7 +64,7 @@
                           <el-input
                             v-model="ruleForm.code"
                             prefix-icon="el-icon-s-tools"
-                            placeholder="验证码：1234"
+                            placeholder="验证码"
                             autocomplete="off"
                             @keyup.enter.native="submitForm('ruleForm')"
                           >

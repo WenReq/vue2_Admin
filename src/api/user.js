@@ -9,7 +9,7 @@ export function login(data) {
 }
 
 export function userinfo(data = {}) {
-  return httpGet('/my/userinfo', data);
+  return httpGet('/user', data);
 }
 
 export function updateUserInfo(data, config) {

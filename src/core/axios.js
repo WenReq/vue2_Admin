@@ -22,7 +22,7 @@ _axios.interceptors.request.use(
       localStorage.getItem('vuex') &&
       JSON.parse(localStorage.getItem('vuex')).users.accessToken;
     if (token) {
-      config.headers['authorization'] = token;
+      config.headers['authorization'] = `Bearer ${token}`;
     }
     // config.headers['Content-Type'] =
     //   'application/x-www-form-urlencoded; charset=UTF-8';
@@ -42,7 +42,7 @@ _axios.interceptors.response.use(
     return message && Promise.reject(message);
   },
   (error) => {
-    return Promise.reject(error);
+    return Promise.reject(error.response.data.data);
   },
 );
 
