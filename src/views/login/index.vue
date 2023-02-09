@@ -56,8 +56,26 @@
                         placeholder="密码：123456"
                         autocomplete="off"
                         show-password
-                        @keyup.enter.native="submitForm('ruleForm')"
                       ></el-input>
+                    </el-form-item>
+                    <el-form-item label="" prop="code">
+                      <div class="code-block">
+                        <div class="code-input">
+                          <el-input
+                            v-model="ruleForm.code"
+                            prefix-icon="el-icon-s-tools"
+                            placeholder="验证码：1234"
+                            autocomplete="off"
+                            @keyup.enter.native="submitForm('ruleForm')"
+                          >
+                          </el-input>
+                        </div>
+                        <div
+                          class="code-part"
+                          v-html="imgUrl"
+                          @click="getCode"
+                        ></div>
+                      </div>
                     </el-form-item>
                   </el-form>
                 </div>
@@ -76,7 +94,7 @@
                         v-model="registerRuleForm.username"
                         autocomplete="off"
                         prefix-icon="el-icon-user"
-                        placeholder="请输出用户名"
+                        placeholder="请输入用户名"
                       ></el-input>
                     </el-form-item>
                     <el-form-item label="" prop="password">
@@ -97,6 +115,14 @@
                         placeholder="请再次输入密码"
                         autocomplete="off"
                         show-password
+                      ></el-input>
+                    </el-form-item>
+                    <el-form-item label="" prop="nickname">
+                      <el-input
+                        v-model="registerRuleForm.nickname"
+                        autocomplete="off"
+                        prefix-icon="el-icon-user"
+                        placeholder="请输入昵称"
                       ></el-input>
                     </el-form-item>
                   </el-form>
@@ -146,7 +172,7 @@
 </template>
 
 <script>
-import { reguser, login } from '@/api/user';
+import { reguser, login, getCode } from '@/api/user';
 export default {
   name: 'login',
   data() {
@@ -190,22 +216,26 @@ export default {
       }
     };
     return {
+      imgUrl: '',
       activeName: 'login',
       loginLoading: false,
       ruleForm: {
         username: '',
         password: '',
+        code: '',
       },
       registerRuleForm: {
         username: '',
         password: '',
         checkPass: '',
+        nickname: '',
       },
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
         ],
         password: [{ validator: validatePassword, trigger: 'blur' }],
+        code: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
       },
       registerRules: {
         username: [
@@ -224,19 +254,44 @@ export default {
   },
   components: {},
   watch: {},
-  mounted() {},
+  mounted() {
+    this.getCode();
+  },
   methods: {
+    getCode() {
+      getCode().then((res) => {
+        const { success, status, data } = res;
+        if (success && status === 200) {
+          this.imgUrl = data;
+        }
+      });
+    },
     submitForm(formName) {
       this.loginLoading = true;
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let param = new URLSearchParams();
+          // let param = new URLSearchParams();
           if (formName === 'registerRuleForm') {
             // 注册
-            param.append('username', this.registerRuleForm.username);
-            param.append('password', this.registerRuleForm.password);
-            reguser(param).then((res) => {
-              if (res.status === 0) {
+            // param.append('username', this.registerRuleForm.username);
+            // param.append('password', this.registerRuleForm.password);
+            // param.append('nickname', this.registerRuleForm.nickname);
+            const {
+              username,
+              password,
+              nickname,
+              avatar = '',
+              email = '',
+            } = this.registerRuleForm;
+            let params = {
+              username,
+              password,
+              nickname,
+              avatar,
+              email,
+            };
+            reguser(params).then((res) => {
+              if (res.status === 200) {
                 this.$message.success(res.message);
                 this.activeName = 'login';
                 this.$nextTick(() => {
@@ -250,10 +305,17 @@ export default {
             });
           } else if (formName === 'ruleForm') {
             // 登陆
-            param.append('username', this.ruleForm.username);
-            param.append('password', this.ruleForm.password);
+            // param.append('username', this.ruleForm.username);
+            // param.append('password', this.ruleForm.password);
+            debugger;
+            const { username, password, code } = this.ruleForm;
+            const param = {
+              username,
+              password,
+              code,
+            };
             this.$store.dispatch('getToken', param).then((res) => {
-              if (res.status === 0) {
+              if (res.status === 200) {
                 this.$message.success(res.message);
                 this.$router.push({
                   path: 'home',
@@ -405,6 +467,15 @@ export default {
           }
           .tab-content {
             margin-top: 35px;
+            .code-block {
+              display: flex;
+              .code-input {
+                width: 100%;
+              }
+              .code-part {
+                cursor: pointer;
+              }
+            }
           }
         }
       }
