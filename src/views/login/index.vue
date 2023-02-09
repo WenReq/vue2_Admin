@@ -270,12 +270,8 @@ export default {
       this.loginLoading = true;
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // let param = new URLSearchParams();
           if (formName === 'registerRuleForm') {
             // 注册
-            // param.append('username', this.registerRuleForm.username);
-            // param.append('password', this.registerRuleForm.password);
-            // param.append('nickname', this.registerRuleForm.nickname);
             const {
               username,
               password,
@@ -305,9 +301,6 @@ export default {
             });
           } else if (formName === 'ruleForm') {
             // 登陆
-            // param.append('username', this.ruleForm.username);
-            // param.append('password', this.ruleForm.password);
-            debugger;
             const { username, password, code } = this.ruleForm;
             const param = {
               username,
