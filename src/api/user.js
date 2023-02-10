@@ -25,5 +25,5 @@ export function updateAvatar(data) {
 }
 
 export function getCode(data) {
-  return httpGet('/login/code', data);
+  return httpGet('/auth/code', data);
 }

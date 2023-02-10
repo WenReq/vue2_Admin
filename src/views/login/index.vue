@@ -319,7 +319,7 @@ export default {
           this.loginLoading = false;
         } else {
           this.loginLoading = false;
-          console.log('error submit!!');
+          console.error('error submit!!');
           return false;
         }
       });

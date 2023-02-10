@@ -8,8 +8,8 @@
     <span><i class="iconfont icon-warning"></i></span>
     <span>{{ content }}</span>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false" size="mini">取 消</el-button>
-      <el-button type="primary" @click="handleConfirm" size="mini"
+      <el-button @click="dialogVisible = false" size="size">取 消</el-button>
+      <el-button type="primary" @click="handleConfirm" size="size"
         >确 定</el-button
       >
     </span>

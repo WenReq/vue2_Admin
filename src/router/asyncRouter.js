@@ -1,11 +1,11 @@
 // import componentRouter from '../router/componentRouter'
-import HomeView from '@/views/HomeView.vue'
+import HomeView from '@/views/HomeView.vue';
 
 export default [
   {
     path: '/home',
     meta: {
-      icon: 'el-icon-s-home'
+      icon: 'el-icon-s-home',
     },
     redirect: '/home/index',
     component: () => import('@/layout/index.vue'),
@@ -13,20 +13,21 @@ export default [
       {
         path: '/home/index',
         name: 'home',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/HomeView.vue'),
+        component: () =>
+          import(/* webpackChunkName: "home" */ '@/views/HomeView.vue'),
         meta: {
-          icon: 'el-icon-s-home'
+          icon: 'el-icon-s-home',
         },
-      }
-    ]
+      },
+    ],
   },
   {
     path: '/bigEvents',
     component: () => import('@/layout/index.vue'),
     redirect: '/bigEvents/cates',
     meta: {
-      title: '大事件-文章管理',
-      icon: 'el-icon-document'
+      title: '个人练手',
+      icon: 'el-icon-document',
     },
     children: [
       {
@@ -34,11 +35,26 @@ export default [
         name: 'ArticleCate',
         meta: {
           title: '文章类别',
-          icon: 'icon-leibie'
+          icon: 'icon-leibie',
         },
-        component: () => import(/* webpackChunkName: "ArticleCate" */ '@/views/bigEvents/cates.vue')
-      }
-    ]
+        component: () =>
+          import(
+            /* webpackChunkName: "ArticleCate" */ '@/views/bigEvents/cates.vue'
+          ),
+      },
+      {
+        path: '/bigEvents/CRUD',
+        name: 'SimpleCrud',
+        meta: {
+          title: 'CRUD',
+          icon: 'el-icon-s-grid',
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "SimpleCrud" */ '@/views/bigEvents/CRUD.vue'
+          ),
+      },
+    ],
   },
   {
     path: '/component',
@@ -46,7 +62,7 @@ export default [
     redirect: '/component/table',
     meta: {
       title: '公用组件',
-      icon: 'el-icon-setting'
+      icon: 'el-icon-setting',
     },
     component: () => import('@/layout/index.vue'),
     children: [
@@ -55,8 +71,8 @@ export default [
         component: HomeView,
         meta: {
           title: '空跳转',
-          icon: 'el-icon-s-order'
-        }
+          icon: 'el-icon-s-order',
+        },
       },
       {
         // 要注意，以 / 开头的嵌套路径会被当作根路径。 这让你充分的使用嵌套组件而无须设置嵌套的路径。
@@ -65,9 +81,12 @@ export default [
         name: 'Table',
         meta: {
           title: 'Table组件',
-          icon: 'el-icon-s-order'
+          icon: 'el-icon-s-order',
         },
-        component: () => import(/* webpackChunkName: "Table" */ '@/views/component/table/list.vue')
+        component: () =>
+          import(
+            /* webpackChunkName: "Table" */ '@/views/component/table/list.vue'
+          ),
       },
       {
         path: '/components/export',
@@ -76,11 +95,14 @@ export default [
           title: '导出功能',
           icon: 'icon-export1',
         },
-        component: () => import(/* webpackChunkName: "Export" */ '@/views/component/export/pdf.vue')
-      }
-    ]
-  }
-]
+        component: () =>
+          import(
+            /* webpackChunkName: "Export" */ '@/views/component/export/pdf.vue'
+          ),
+      },
+    ],
+  },
+];
 
 /**
  * 1. 编程式 router.push(...)

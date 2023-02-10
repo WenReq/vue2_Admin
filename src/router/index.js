@@ -5,44 +5,44 @@
  * @LastEditors: wenshaochang
  * @LastEditTime: 2022-06-20 19:49:29
  */
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
 // import HomeView from "../views/HomeView.vue";
-import asyncRouter from './asyncRouter'
+import asyncRouter from './asyncRouter';
 
-const originalPush = VueRouter.prototype.push
+const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch((err) => err)
-}
+  return originalPush.call(this, location).catch((err) => err);
+};
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/login',
+    path: '/',
     redirect: {
-      name: 'login'
-    }
+      name: 'login',
+    },
   },
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/views/login/index.vue')
+    component: () => import('@/views/login/index.vue'),
   },
   ...asyncRouter,
   {
     path: '/error',
     name: 'error',
-    component: () => import('@/views/common/error.vue')
+    component: () => import('@/views/common/error.vue'),
   },
   {
     path: '*',
     // redirect: '/error',
     redirect: {
-      name: 'error'
-    }
-  }
-]
+      name: 'error',
+    },
+  },
+];
 
 const router = new VueRouter({
   mode: 'hash',
@@ -50,8 +50,8 @@ const router = new VueRouter({
   routes,
   // 切换页面，滚动到最顶部
   scrollBehavior: () => {
-    return { x: 0, y: 0 }
-  }
-})
+    return { x: 0, y: 0 };
+  },
+});
 
-export default router
+export default router;
