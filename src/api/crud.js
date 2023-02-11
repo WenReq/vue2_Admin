@@ -34,3 +34,12 @@ export function del(data) {
     method: 'delete',
   });
 }
+
+// 添加标签
+export function addTag(data) {
+  return _axios({
+    url: '/curd/add/tags',
+    method: 'post',
+    data,
+  });
+}

@@ -26,19 +26,30 @@
           :data="tableData"
           border
           v-loading="tableLoading"
+          :height="`calc(100vh - 330px)`"
           element-loading-text="拼命加载中"
           element-loading-spinner="el-icon-loading"
-          element-loading-background="rgba(0, 0, 0, 0.8)"
         >
           <el-table-column prop="id" width="60" label="ID"> </el-table-column>
-          <el-table-column prop="name" label="名称"> </el-table-column>
-          <el-table-column prop="desc" label="描述"> </el-table-column>
-          <el-table-column prop="createTime" label="创建时间">
+          <el-table-column prop="name" label="名称" width="130">
+          </el-table-column>
+          <el-table-column prop="tags" label="标签" width="160">
+            <template slot-scope="scope">
+              {{ scope.row.tags | tagsFilter }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="desc"
+            label="描述"
+            :show-overflow-tooltip="true"
+          >
+          </el-table-column>
+          <el-table-column prop="createTime" label="创建时间" width="180">
             <template slot-scope="scope">
               {{ scope.row.createTime | dateFilter }}
             </template>
           </el-table-column>
-          <el-table-column fixed="right" label="操作" width="150">
+          <el-table-column fixed="right" label="操作" width="200">
             <template slot-scope="scope">
               <el-button
                 @click="handleOpreate(scope.row.id, scope.row)"
@@ -54,9 +65,35 @@
                 icon="el-icon-delete"
                 >删除</el-button
               >
+              <el-button
+                @click="
+                  () => {
+                    tagVisibility = true;
+                    rowId = scope.row.id;
+                    selectTagsList = [];
+                  }
+                "
+                type="text"
+                size="small"
+                icon="el-icon-collection-tag"
+                >添加标签</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
+      </div>
+      <div class="content-page">
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pagination.page"
+          :page-sizes="[10, 20, 50, 100]"
+          :page-size="pagination.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="pagination.total"
+        >
+        </el-pagination>
       </div>
     </div>
     <!-- 新增和编辑的弹框 -->
@@ -103,12 +140,36 @@
       :content="`是否删除【${deleteName}】数据?`"
       @confirm="handleConfirm"
     />
+
+    <!-- 标签 -->
+    <el-dialog title="添加标签" :visible.sync="tagVisibility" width="30%">
+      <el-select
+        style="width: 100%"
+        v-model="selectTagsList"
+        multiple
+        placeholder="请选择"
+      >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="tagVisibility = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="handleTagSubmit" size="small"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { formatting } from '@/utils/common.js';
-import { getData, add, update, del } from '@/api/crud';
+import { getData, add, update, del, addTag } from '@/api/crud';
 import deleteDialog from '@/views/component/deleteDialog';
 
 export default {
@@ -116,10 +177,12 @@ export default {
   components: { deleteDialog },
   data() {
     return {
+      rowId: '',
       deleteId: '',
       deleteName: '',
       visibility: false,
       tableLoading: false,
+      tagVisibility: false,
       editObj: {},
       searchForm: {
         name: '',
@@ -132,12 +195,55 @@ export default {
         name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
         desc: [{ required: true, message: '请输入描述', trigger: 'blur' }],
       },
+      pagination: {
+        page: 1,
+        total: 0,
+        pageSize: 10,
+      },
       tableData: [],
+      selectTagsList: [],
+      options: [
+        {
+          value: '好人',
+          label: '好人',
+        },
+        {
+          value: '坏人',
+          label: '坏人',
+        },
+        {
+          value: '不好不坏',
+          label: '不好不坏',
+        },
+        {
+          value: '办案',
+          label: '办案',
+        },
+        {
+          value: '检举',
+          label: '检举',
+        },
+        {
+          value: '杀人',
+          label: '杀人',
+        },
+        {
+          value: '涉黑',
+          label: '涉黑',
+        },
+        {
+          value: '贪污',
+          label: '贪污',
+        },
+      ],
     };
   },
   filters: {
     dateFilter(val) {
       return formatting(val);
+    },
+    tagsFilter(val) {
+      return val.map((it) => it.name).join('，');
     },
   },
   // 计算属性
@@ -157,13 +263,19 @@ export default {
     init() {
       this.getData();
     },
+    // 获取列表数据
     getData() {
       this.tableLoading = true;
-      const params = { keyword: this.searchForm.name };
+      const params = {
+        keyword: this.searchForm.name,
+        page: this.pagination.page,
+        pageSize: this.pagination.pageSize,
+      };
       getData(params)
         .then((res) => {
           const { status, data, message } = res.data;
-          this.tableData = data || [];
+          this.tableData = data.data || [];
+          this.pagination.total = data.total || 0;
           status !== 200 && this.$message.error(message);
           this.tableLoading = false;
         })
@@ -178,8 +290,8 @@ export default {
     // 新增和编辑操作
     handleOpreate(id, row = {}) {
       // 编辑当前行对象
-      this.editObj = id ? row : {};
-      if (id) this.ruleForm = row || {};
+      this.editObj = id ? JSON.parse(JSON.stringify(row)) : {};
+      if (id) this.ruleForm = JSON.parse(JSON.stringify(row)) || {};
       this.visibility = true;
       this.$nextTick(() => {
         if (id === undefined) {
@@ -221,6 +333,30 @@ export default {
         this.$refs.deleteDialog.dialogVisible = false;
         this.$message[msgType](message);
         this.getData();
+      });
+    },
+    // 分页 - 改变一页显示多少条
+    handleSizeChange(val) {
+      this.pagination.pageSize = val;
+      this.getData();
+    },
+    // 分页 - 改变页码
+    handleCurrentChange(val) {
+      this.pagination.page = val;
+      this.getData();
+    },
+    // 添加标签
+    handleTagSubmit() {
+      const params = {
+        curdId: this.rowId,
+        tags: this.selectTagsList,
+      };
+      addTag(params).then((res) => {
+        const { status, message } = res.data;
+        const msgType = status === 200 ? 'success' : 'error';
+        this.$message[msgType](message);
+        this.tagVisibility = status === 200 ? false : true;
+        status === 200 && this.getData();
       });
     },
   },
@@ -299,6 +435,10 @@ export default {
 .content {
   &-table {
     @{mt}: @10p;
+  }
+  &-page {
+    @{mt}: @10p;
+    text-align: right;
   }
 }
 </style>

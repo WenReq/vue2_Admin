@@ -11,15 +11,19 @@
         :collapse="isCollapse"
         :router="true"
         :collapse-transition="false"
-				:unique-opened="true"
+        :unique-opened="true"
         background-color="#191a20"
-				text-color="#bdbdc0"
-				active-text-color="#fff"
+        text-color="#bdbdc0"
+        active-text-color="#fff"
       >
         <!-- 菜单不能正常收缩。因为子组件中添加了div标签，把ul中的li元素外添加了div -->
         <!-- <SubItem :menuList="menuList"></SubItem> -->
         <template v-for="(subItem, index) in menuList">
-          <el-submenu :key="subItem.path" v-if="subItem.children && subItem.children.length > 0" :index="subItem.path">
+          <el-submenu
+            :key="subItem.path"
+            v-if="subItem.children && subItem.children.length > 0"
+            :index="subItem.path"
+          >
             <template #title>
               <i class="iconfont" :class="subItem.meta.icon"></i>
               <span class="menu-name">{{ subItem.meta.title }}</span>
@@ -37,46 +41,47 @@
 </template>
 
 <script>
-import SubItem from './components/SubItem'
-import asyncRouter from '@/router/asyncRouter'
+import SubItem from './components/SubItem';
+import asyncRouter from '@/router/asyncRouter';
 
 export default {
   name: 'Aside',
   components: { SubItem },
-  data () {
-    return {
-
-    }
+  data() {
+    return {};
   },
   computed: {
-    isCollapse () {
-      return this.$store.state.menus.isCollapse
+    isCollapse() {
+      return this.$store.state.menus.isCollapse;
     },
-    activeMenu () {
-      return this.$route.path
+    activeMenu() {
+      return this.$route.path;
     },
-    menuList () {
-      return this.$store.state.menus.menuList
+    menuList() {
+      return this.$store.state.menus.menuList;
     },
   },
-  mounted () {
-    const vm = this
+  mounted() {
+    const vm = this;
     window.onresize = () => {
-      vm.listeningWindow()
-    }
-    this.handleSetMenuList()
+      vm.listeningWindow();
+    };
+    this.handleSetMenuList();
   },
   methods: {
     listeningWindow() {
       const screenWidth = document.body.clientWidth;
-      if (this.isCollapse === false && screenWidth < 1200) this.$store.commit('setCollapse');
-      if (this.isCollapse === true && screenWidth > 1200) this.$store.commit('setCollapse');
+      if (this.isCollapse === false && screenWidth < 1200)
+        this.$store.commit('setCollapse');
+      if (this.isCollapse === true && screenWidth > 1200)
+        this.$store.commit('setCollapse');
     },
     handleSetMenuList() {
       // 如果是动态获取的路由，需要调接口后设置。this.$store.commit('setMenuList', res.data);
       // 目前本项目是静态的路由
       // 处理路由结构用于系统的左侧菜单
-      const filterData = this.handleFilterData(asyncRouter);
+      const router = JSON.parse(JSON.stringify(asyncRouter));
+      const filterData = this.handleFilterData(router);
       this.$store.commit('setMenuList', filterData);
     },
     /**
@@ -85,20 +90,20 @@ export default {
      * @param {Array} list 本地静态路由集合
      * @returns {Array} 返回处理后的菜单数据结构
      */
-    handleFilterData (list) {
-      list.shift()
+    handleFilterData(list) {
+      list.shift();
       const homeConfig = {
         path: '/home/index',
         meta: {
           title: '首页',
-          icon: 'el-icon-s-home'
+          icon: 'el-icon-s-home',
         },
-      }
-      list.unshift(homeConfig)
-      return list
-    }
+      };
+      list.unshift(homeConfig);
+      return list;
+    },
   },
-}
+};
 </script>
 
 <style lang="less" scoped>
