@@ -6,6 +6,7 @@
  * @LastEditTime: 2022-06-14 22:50:49
  */
 import axios from 'axios';
+import router from '@/router/index';
 
 const baseURL = process.env.VUE_APP_BASE_API;
 
@@ -15,6 +16,13 @@ const config = {
 };
 
 const _axios = axios.create(config);
+
+const loginFn = function () {
+  localStorage.removeItem('vuex');
+  router.push({
+    path: '/login',
+  });
+};
 
 _axios.interceptors.request.use(
   (config) => {
@@ -35,14 +43,23 @@ _axios.interceptors.request.use(
 
 _axios.interceptors.response.use(
   (response) => {
-    const { status, message } = response.data;
+    const { status, message, name } = response.data;
     if (status === 0 || status === 200) {
+      return Promise.resolve(response);
+    } else if (status === 401 && name === 'UnauthorizedException') {
+      loginFn();
       return Promise.resolve(response);
     }
     return message && Promise.reject(message);
   },
   (error) => {
-    return Promise.reject(error.response.data.data);
+    const data = error.response.data.data;
+    if (data.status === 401 && data.name === 'UnauthorizedException') {
+      loginFn();
+      return Promise.reject({});
+    } else {
+      return Promise.reject(data);
+    }
   },
 );
 
